@@ -47,7 +47,7 @@ export function MyProjectsList({ projects }: MyProjectsListProps) {
               style={{
                 transition: `border-color 0.25s ease, box-shadow 0.25s ease`,
               }}
-              className="flex bg-muted border-2 border-border hover:border-ring rounded-md overflow-hidden hover:shadow-lg cursor-pointer"
+              className="flex bg-muted/50 border-2 border-border hover:border-ring rounded-md overflow-hidden cursor-pointer"
             >
               <Link
                 to={`/projects/${project.id}`}
