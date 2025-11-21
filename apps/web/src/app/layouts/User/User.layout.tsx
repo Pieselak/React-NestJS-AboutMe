@@ -43,7 +43,7 @@ export function UserLayout() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="flex flex-1 mx-3 max-w-5xl justify-center items-start overflow-hidden"
+          className="flex flex-1 m-3 max-w-5xl justify-center items-start overflow-hidden"
         >
           <Outlet />
         </motion.main>
