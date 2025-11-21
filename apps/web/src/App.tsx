@@ -23,13 +23,10 @@ function App() {
   const savedLanguage = getSavedLanguage();
 
   useEffect(() => {
-    if (savedLanguage) {
-      i18n.changeLanguage(savedLanguage);
-    } else {
-      navigate("/language");
-      i18n.changeLanguage("en");
-    }
-  });
+    !savedLanguage &&
+      navigate("/language?first-time=true", { state: { firstTime: true } });
+    i18n.changeLanguage(savedLanguage || "en");
+  }, []);
 
   return (
     <Suspense fallback={<LoadingPage />}>

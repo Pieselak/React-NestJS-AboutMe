@@ -1,8 +1,13 @@
+import { useLocation, useNavigate } from "react-router-dom";
 import i18n, { getAvailableLanguages } from "@/i18n.ts";
 import { useTranslation } from "react-i18next";
 
 export function SelectLanguagePage() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const isFirstTime = location.state?.firstTime ?? false;
   const languages = getAvailableLanguages();
   const currentLanguage = i18n.language;
 
@@ -16,6 +21,9 @@ export function SelectLanguagePage() {
             className={`flex justify-center items-center gap-2 p-2 border-2 border-border rounded-xl hover:border-ring cursor-pointer max-sm:flex-1 transition-[border-color, background-color] duration-250 ${currentLanguage === lang.code ? "bg-accent/30 border-ring text-accent-foreground" : ""}`}
             onClick={() => {
               i18n.changeLanguage(lang.code);
+              if (isFirstTime) {
+                navigate("/");
+              }
             }}
           >
             <div className="size-8">
