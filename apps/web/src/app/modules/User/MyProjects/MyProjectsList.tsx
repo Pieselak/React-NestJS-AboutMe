@@ -26,10 +26,10 @@ export function MyProjectsList({ projects }: MyProjectsListProps) {
   return (
     <>
       <div className="flex flex-col justify-center items-center">
-        <h1 className="text-2xl font-bold text-primary">
+        <h1 className="text-2xl font-bold text-primary text-center">
           {t("user.myProjectsPage.title")}
         </h1>
-        <h2 className="text-card-foreground">
+        <h2 className="text-card-foreground text-center">
           {t("user.myProjectsPage.description")}
         </h2>
       </div>
