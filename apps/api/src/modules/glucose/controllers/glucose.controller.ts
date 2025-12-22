@@ -1,0 +1,78 @@
+import {
+  Controller,
+  Get,
+  NotImplementedException,
+  ServiceUnavailableException,
+} from '@nestjs/common';
+import { GlucoseService } from '../services/glucose.service';
+import {
+  ApiInternalServerErrorResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiServiceUnavailableResponse,
+} from '@nestjs/swagger';
+import { GetCurrentGlucoseResponse } from '../dto/response/getCurrentGlucose';
+import { GetGraphDataResponse } from '../dto/response/getGraphData';
+import { GetSensorDataResponse } from '../dto/response/getSensorData';
+
+@Controller('glucose')
+export class GlucoseController {
+  constructor(private readonly glucoseService: GlucoseService) {}
+
+  @Get('current')
+  @ApiOperation({
+    summary: 'Get current glucose data',
+    description: 'Retrieves the current glucose reading.',
+  })
+  @ApiOkResponse({
+    description: 'Successfully retrieved glucose data',
+    type: GetCurrentGlucoseResponse,
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Internal server error',
+  })
+  @ApiServiceUnavailableResponse({
+    description: 'Service is unavailable',
+  })
+  async getCurrentGlucose(): Promise<GetCurrentGlucoseResponse> {
+    return await this.glucoseService.getCurrentGlucose();
+  }
+
+  @Get('graph')
+  @ApiOperation({
+    summary: 'Get glucose graph data',
+    description: 'Retrieves glucose data formatted for graphing purposes.',
+  })
+  @ApiOkResponse({
+    description: 'Successfully retrieved graph data',
+    type: GetGraphDataResponse,
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Internal server error',
+  })
+  @ApiServiceUnavailableResponse({
+    description: 'Service is unavailable',
+  })
+  async getGraphData(): Promise<GetGraphDataResponse> {
+    return await this.glucoseService.getGraphData();
+  }
+
+  @Get('sensor')
+  @ApiOperation({
+    summary: 'Get sensor data',
+    description: 'Retrieves data about the glucose sensor.',
+  })
+  @ApiOkResponse({
+    description: 'Successfully retrieved sensor data',
+    type: GetSensorDataResponse,
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Internal server error',
+  })
+  @ApiServiceUnavailableResponse({
+    description: 'Service is unavailable',
+  })
+  async getSensorData(): Promise<GetSensorDataResponse> {
+    return await this.glucoseService.getSensorData();
+  }
+}
