@@ -1,44 +1,54 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { GlucoseSensors } from '../../glucose.enum';
 
 export class GetSensorDataResponse {
   @ApiProperty({
     type: Boolean,
-    description: 'Indicates if the sensor is currently active',
+    description: 'Indicates whether the sensor is currently active',
     example: true,
   })
-  active: boolean;
+  isActive: boolean;
 
   @ApiProperty({
     type: String,
-    description: 'Name of the sensor',
-    example: 'Freestyle Libre 2',
-    required: false,
+    description: 'Name of the glucose sensor device',
+    enum: GlucoseSensors,
+    enumName: 'GlucoseSensor',
+    example: GlucoseSensors.LIBRE_2,
+    nullable: true,
   })
-  name?: string;
+  name: string | null;
 
   @ApiProperty({
     type: String,
-    description: 'URL of the sensor image',
-    example: 'https://example.com/sensor-image.png',
-    required: false,
+    description: 'Image URL of the glucose sensor device',
+    example: 'https://example.com/images/libre2.png',
+    nullable: true,
   })
-  imageUrl?: string;
+  image: string | null;
 
   @ApiProperty({
     type: Number,
     description:
-      'Timestamp when the sensor will expire in milliseconds since epoch',
+      'Unix timestamp in milliseconds when the sensor data was last uploaded',
     example: 1672531199000,
-    required: false,
+    nullable: true,
   })
-  expiresAt?: number; // timestamp in milliseconds
+  lastUploadAt: number | null;
 
   @ApiProperty({
     type: Number,
-    description:
-      'Timestamp when the sensor was last uploaded in milliseconds since epoch',
+    description: 'Unix timestamp in milliseconds when the sensor will expire',
     example: 1672531199000,
-    required: false,
+    nullable: true,
   })
-  lastUploadAt?: number; // timestamp in milliseconds
+  expireAt: number | null;
+
+  @ApiProperty({
+    type: Number,
+    description: 'Time in milliseconds when the sensor will expire',
+    example: 172800000,
+    nullable: true,
+  })
+  expireIn: number | null;
 }

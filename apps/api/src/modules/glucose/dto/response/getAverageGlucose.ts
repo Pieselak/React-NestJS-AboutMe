@@ -1,7 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { GLUCOSE_CONSTANTS } from '../../../../constants/glucose.constants';
+import { GlucoseUnits } from '../../glucose.enum';
 
 export class GetAverageGlucoseResponse {
+  @ApiProperty({
+    type: Boolean,
+    description: 'Indicates if there is sufficient data to calculate',
+    example: true,
+  })
+  sufficientData: boolean;
+
   @ApiProperty({
     type: Number,
     description: 'Average glucose value',
@@ -12,15 +19,15 @@ export class GetAverageGlucoseResponse {
   @ApiProperty({
     type: String,
     description: 'Unit of measurement for glucose value',
-    enum: GLUCOSE_CONSTANTS.UNITS,
+    enum: GlucoseUnits,
     enumName: 'GlucoseUnit',
-    example: GLUCOSE_CONSTANTS.UNITS[1],
+    example: GlucoseUnits.MG_DL,
   })
   unit: string;
 
   @ApiProperty({
     type: Number,
-    description: 'Number of hours the average was calculated over',
+    description: 'Optional number of hours to consider for the calculation',
     example: 24,
     required: false,
   })

@@ -1,8 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsNumber, IsOptional, Min } from 'class-validator';
+import { IsNumber, IsOptional, Max, Min } from 'class-validator';
 
-export class GetAverageGlucoseInput {
+export class GetAverageGlucoseQuery {
   @ApiProperty({
     description: 'Number of hours to look back for average glucose calculation',
     minimum: 1,
@@ -13,5 +13,6 @@ export class GetAverageGlucoseInput {
   @IsNumber()
   @IsOptional()
   @Min(1)
+  @Max(8760)
   hours?: number;
 }

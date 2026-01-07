@@ -1,11 +1,31 @@
-import { Injectable, Logger } from '@nestjs/common';
+import {
+  Injectable,
+  Logger,
+  NotImplementedException,
+  ServiceUnavailableException,
+} from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { GlucoseDexcomConfig } from '../../../../config/glucose-dexcom.config';
+import { IGlucoseService } from '../glucose.service';
+import { GetCurrentGlucoseResponse } from '../../dto/response/getCurrentGlucose';
+import { GetGraphDataResponse } from '../../dto/response/getGraphData';
+import { GetSensorDataResponse } from '../../dto/response/getSensorData';
 
 @Injectable()
-export class GlucoseDexcomService {
+export class GlucoseDexcomService implements IGlucoseService {
   private readonly logger = new Logger(GlucoseDexcomService.name);
+
   private initFail = false;
+  private inFlight: Record<string, Promise<any> | null> = {};
+
+  private dexcomData: {
+    timestamp: number;
+    unit: string;
+    currentGlucose: GetCurrentGlucoseResponse;
+    graphData: GetGraphDataResponse;
+    sensorData: GetSensorDataResponse;
+  };
+
   constructor(
     private readonly config: GlucoseDexcomConfig,
     private readonly httpService: HttpService,
@@ -13,51 +33,43 @@ export class GlucoseDexcomService {
 
   async init() {
     try {
-      if (!this.config.apiUrl) {
-        throw new Error('DEXCOM_API_URL env is not configured.');
-      }
-      if (!this.config.apiVersion) {
-        throw new Error('DEXCOM_API_VERSION env is not configured.');
-      }
-      if (!this.config.clientId) {
-        throw new Error('DEXCOM_CLIENT_ID env is not configured.');
-      }
-      if (!this.config.clientSecret) {
-        throw new Error('DEXCOM_CLIENT_SECRET env is not configured.');
-      }
-      if (!this.config.redirectUri) {
-        throw new Error('DEXCOM_REDIRECT_URI env is not configured.');
-      }
-      await this.scheduleGlucoseFetch();
+      this.config.ensureValid();
+      await this.scheduleFetchGlucose();
     } catch (error) {
       this.initFail = true;
-      this.logger.error(error.message);
+      this.logger.error(error instanceof Error ? error.message : error);
     }
   }
 
-  isAvailable(): boolean {
-    return this.initFail;
+  private ensureAvailable(): void {
+    if (this.initFail) {
+      throw new ServiceUnavailableException(
+        'Glucose Dexcom service is not available.',
+      );
+    }
   }
 
-  async scheduleGlucoseFetch() {
+  private async scheduleFetchGlucose() {
     console.log('GlucoseLibreService scheduleGlucoseFetch');
   }
 
-  async getCurrentGlucose() {
-    setTimeout(function () {
-      return 'Current glucose data from Dexcom';
-    }, 2000);
+  async getUnit(): Promise<string> {
+    this.ensureAvailable();
+    return 'mg/dL';
   }
 
-  async getGraphData() {
-    setTimeout(function () {
-      return 'Glucose graph data from Dexcom';
-    }, 2000);
+  async getCurrentGlucose(): Promise<GetCurrentGlucoseResponse> {
+    this.ensureAvailable();
+    throw new NotImplementedException();
   }
 
-  async getSensorData() {
-    setTimeout(function () {
-      return 'Glucose sensor data from Dexcom';
-    }, 2000);
+  async getGraphData(): Promise<GetGraphDataResponse> {
+    this.ensureAvailable();
+    throw new NotImplementedException();
+  }
+
+  async getSensorData(): Promise<GetSensorDataResponse> {
+    this.ensureAvailable();
+    throw new NotImplementedException();
   }
 }

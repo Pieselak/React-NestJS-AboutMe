@@ -1,4 +1,4 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import { GlucoseService } from '../services/glucose.service';
 import {
   ApiOperation,
@@ -6,19 +6,23 @@ import {
   ApiBadRequestResponse,
   ApiInternalServerErrorResponse,
   ApiServiceUnavailableResponse,
+  ApiTags,
 } from '@nestjs/swagger';
 import { GetTimeInRangeResponse } from '../dto/response/getTimeInRange';
 import { GetAverageGlucoseResponse } from '../dto/response/getAverageGlucose';
-import { GetHighestGlucoseResponse } from '../dto/response/GetHighestGlucose';
-import { GetLowestGlucoseResponse } from '../dto/response/GetLowestGlucose';
-import { GetTimeInRangeInput } from '../dto/input/getTimeInRange';
-import { GetAverageGlucoseInput } from '../dto/input/getAverageGlucose';
+import { GetHighestGlucoseResponse } from '../dto/response/getHighestGlucose';
+import { GetLowestGlucoseResponse } from '../dto/response/getLowestGlucose';
+import { GetTimeInRangeQuery } from '../dto/input/getTimeInRange';
+import { GetAverageGlucoseQuery } from '../dto/input/getAverageGlucose';
+import { GetHighestGlucoseQuery } from '../dto/input/getHighestGlucose';
+import { GetLowestGlucoseQuery } from '../dto/input/getLowestGlucose';
 
 @Controller('glucose/statistics')
+@ApiTags('Glucose Statistics')
 export class GlucoseStatisticsController {
   constructor(private readonly glucoseService: GlucoseService) {}
 
-  @Get('time-in-range/{:hours}')
+  @Get('time-in-range')
   @ApiOperation({
     summary: 'Get time in range data',
     description: 'Retrieves time in range statistics for glucose levels.',
@@ -37,12 +41,12 @@ export class GlucoseStatisticsController {
     description: 'Service is unavailable',
   })
   async getTimeInRange(
-    @Param() params: GetTimeInRangeInput,
+    @Query() query: GetTimeInRangeQuery,
   ): Promise<GetTimeInRangeResponse> {
-    return await this.glucoseService.getTimeInRange(params);
+    return await this.glucoseService.getTimeInRange(query);
   }
 
-  @Get('average/{:hours}')
+  @Get('average')
   @ApiOperation({
     summary: 'Get average glucose',
     description: 'Retrieves average glucose level statistics.',
@@ -61,9 +65,9 @@ export class GlucoseStatisticsController {
     description: 'Service is unavailable',
   })
   async getAverageGlucose(
-    @Param() params: GetAverageGlucoseInput,
+    @Query() query: GetAverageGlucoseQuery,
   ): Promise<GetAverageGlucoseResponse> {
-    return await this.glucoseService.getAverageGlucose(params);
+    return await this.glucoseService.getAverageGlucose(query);
   }
 
   @ApiOperation({
@@ -81,8 +85,10 @@ export class GlucoseStatisticsController {
     description: 'Service is unavailable',
   })
   @Get('highest')
-  async getHighestGlucose(): Promise<GetHighestGlucoseResponse> {
-    return await this.glucoseService.getHighestGlucose();
+  async getHighestGlucose(
+    @Query() query: GetHighestGlucoseQuery,
+  ): Promise<GetHighestGlucoseResponse> {
+    return await this.glucoseService.getHighestGlucose(query);
   }
 
   @Get('lowest')
@@ -100,7 +106,9 @@ export class GlucoseStatisticsController {
   @ApiServiceUnavailableResponse({
     description: 'Service is unavailable',
   })
-  async getLowestGlucose(): Promise<GetLowestGlucoseResponse> {
-    return await this.glucoseService.getLowestGlucose();
+  async getLowestGlucose(
+    @Query() query: GetLowestGlucoseQuery,
+  ): Promise<GetLowestGlucoseResponse> {
+    return await this.glucoseService.getLowestGlucose(query);
   }
 }

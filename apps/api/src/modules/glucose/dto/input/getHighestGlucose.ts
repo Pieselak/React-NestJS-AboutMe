@@ -2,9 +2,9 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsNumber, IsOptional, Max, Min } from 'class-validator';
 
-export class GetTimeInRangeQuery {
+export class GetHighestGlucoseQuery {
   @ApiProperty({
-    description: 'Number of hours to look back for time in range calculation',
+    description: 'Number of hours to look back for highest glucose reading',
     minimum: 1,
     required: false,
     example: 24,

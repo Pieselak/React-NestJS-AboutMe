@@ -1,31 +1,30 @@
 export const GLUCOSE_CONSTANTS = {
-  UNITS: ['mmol/L', 'mg/dL'] as const,
-  COLORS: ['none', 'green', 'yellow', 'orange', 'red'] as const,
-  TRENDS: [
-    'risingRapidly',
-    'rising',
-    'risingSlowly',
-    'flat',
-    'decreasingSlowly',
-    'decreasing',
-    'decreasingRapidly',
-    'none',
-  ] as const,
-  STATUS: ['high', 'normal', 'low'] as const,
+  SEC_TO_MS: 1000,
   LIBRE: {
-    SENSOR_LIFETIME_SEC: 1296000,
-    REFRESH_BUFFER_MS: 60000,
+    FETCH_TIMEOUT_MS: 65000,
     RETRY_MS: 15000,
-    UNITS: {
-      0: 'mmol/L',
-      1: 'mg/dL',
-    },
-    AUTH: {
-      CACHE_KEY: 'libreview_libre_auth_token',
-      BUFFER_TIME_SEC: 300,
+    BUFFER_SEC: 300,
+    SENSOR_LIFETIME_SEC: 1296000,
+    CACHE_KEYS: {
+      RATELIMIT_FETCH_GLUCOSE: 'libre_ratelimit_fetch_glucose',
+      RATELIMIT_FETCH_TOKEN: 'libre_ratelimit_fetch_token',
+      AUTH_TOKEN: 'libre_auth_token',
     },
   },
-  SEC_TO_MS: 1000,
+  DEXCOM: {
+    BUFFER_SEC: 300,
+    CACHE_KEYS: {
+      AUTH_TOKEN: 'dexcom_auth_token',
+    },
+  },
+  IMAGES: {
+    LIBRE: 'assets/sensor/libre.png',
+    LIBRE_NEW: 'assets/sensor/libre_new.png',
+    DEXCOM: 'assets/sensor/dexcom.png',
+  },
+
+  // LEGACY CONSTANTS
+
   GLUCOSE: {
     SENSOR_LIFETIME_SEC: 1209600,
     REFRESH_BUFFER_MS: 65000,

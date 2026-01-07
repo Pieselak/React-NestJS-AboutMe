@@ -12,21 +12,29 @@ import { GetGraphDataResponse } from '../dto/response/getGraphData';
 import { GetSensorDataResponse } from '../dto/response/getSensorData';
 import { GetTimeInRangeResponse } from '../dto/response/getTimeInRange';
 import { GetAverageGlucoseResponse } from '../dto/response/getAverageGlucose';
-import { GetHighestGlucoseResponse } from '../dto/response/GetHighestGlucose';
-import { GetLowestGlucoseResponse } from '../dto/response/GetLowestGlucose';
-import { GetTimeInRangeInput } from '../dto/input/getTimeInRange';
-import { GetAverageGlucoseInput } from '../dto/input/getAverageGlucose';
+import { GetHighestGlucoseResponse } from '../dto/response/getHighestGlucose';
+import { GetLowestGlucoseResponse } from '../dto/response/getLowestGlucose';
+import { GetTimeInRangeQuery } from '../dto/input/getTimeInRange';
+import { GetAverageGlucoseQuery } from '../dto/input/getAverageGlucose';
+import { GlucoseRepository } from '../repositories/glucose.repository';
+
+export interface IGlucoseService {
+  init(): Promise<void>;
+  getUnit(): Promise<string>;
+  getCurrentGlucose(): Promise<GetCurrentGlucoseResponse>;
+  getGraphData(): Promise<GetGraphDataResponse>;
+  getSensorData(): Promise<GetSensorDataResponse>;
+}
 
 @Injectable()
 export class GlucoseService {
   private readonly logger = new Logger(GlucoseService.name);
-  private readonly serviceByProvider: Record<
-    string,
-    GlucoseLibreService | GlucoseDexcomService
-  >;
+  private readonly serviceByProvider: Record<string, IGlucoseService>;
+  private initFail = false;
 
   constructor(
     private readonly config: GlucoseConfig,
+    private readonly repository: GlucoseRepository,
     private readonly libreService: GlucoseLibreService,
     private readonly dexcomService: GlucoseDexcomService,
   ) {
@@ -36,67 +44,99 @@ export class GlucoseService {
     };
   }
 
-  private checkAvailability() {
-    if (!this.serviceByProvider[this.config.sensorProvider].isAvailable()) {
-      throw new ServiceUnavailableException('Sensor service is not available.');
-    }
-  }
-
   async onModuleInit() {
     try {
-      if (!this.config.sensorProvider) {
-        throw new Error('Sensor provider is not configured.');
-      }
+      this.config.ensureValid();
       if (!this.serviceByProvider[this.config.sensorProvider]) {
         throw new Error('Invalid sensor provider configured.');
       }
       await this.serviceByProvider[this.config.sensorProvider].init();
     } catch (error) {
-      this.logger.error(error.message);
+      this.initFail = true;
+      this.logger.error(error instanceof Error ? error.message : error);
+    }
+  }
+
+  private ensureAvailable(): void {
+    if (this.initFail) {
+      throw new ServiceUnavailableException(
+        'Glucose service is not available.',
+      );
     }
   }
 
   async getCurrentGlucose(): Promise<GetCurrentGlucoseResponse> {
-    this.checkAvailability();
-    throw new NotImplementedException();
-    // return this.serviceByProvider[
-    //   this.config.sensorProvider
-    // ].getCurrentGlucose();
+    return this.serviceByProvider[
+      this.config.sensorProvider
+    ].getCurrentGlucose();
   }
 
   async getGraphData(): Promise<GetGraphDataResponse> {
-    this.checkAvailability();
-    throw new NotImplementedException();
-    // return this.serviceByProvider[this.config.sensorProvider].getGraphData();
+    return this.serviceByProvider[this.config.sensorProvider].getGraphData();
   }
 
   async getSensorData(): Promise<GetSensorDataResponse> {
-    this.checkAvailability();
-    throw new NotImplementedException();
-    // return this.serviceByProvider[this.config.sensorProvider].getSensorData();
+    return this.serviceByProvider[this.config.sensorProvider].getSensorData();
   }
 
   async getTimeInRange(
-    params: GetTimeInRangeInput,
+    params: GetTimeInRangeQuery,
   ): Promise<GetTimeInRangeResponse> {
-    this.checkAvailability();
-    throw new NotImplementedException();
+    this.ensureAvailable();
+    const unit =
+      await this.serviceByProvider[this.config.sensorProvider].getUnit();
+
+    return await this.repository.getTimeInRange({
+      unit: unit,
+      hours: params.hours,
+      provider: this.config.sensorProvider,
+      // Temporary hardcoded values until user-specific targets are implemented
+      targetLow: 80,
+      targetHigh: 180,
+      levelLow: 70,
+      levelHigh: 230,
+    });
   }
 
   async getAverageGlucose(
-    params: GetAverageGlucoseInput,
+    params: GetAverageGlucoseQuery,
   ): Promise<GetAverageGlucoseResponse> {
-    this.checkAvailability();
-    throw new NotImplementedException();
+    this.ensureAvailable();
+    const unit =
+      await this.serviceByProvider[this.config.sensorProvider].getUnit();
+
+    return await this.repository.getAverageGlucose({
+      unit: unit,
+      hours: params.hours,
+      provider: this.config.sensorProvider,
+    });
   }
 
-  async getHighestGlucose(): Promise<GetHighestGlucoseResponse> {
-    this.checkAvailability();
-    throw new NotImplementedException();
+  async getHighestGlucose(
+    params: GetAverageGlucoseQuery,
+  ): Promise<GetHighestGlucoseResponse> {
+    this.ensureAvailable();
+    const unit =
+      await this.serviceByProvider[this.config.sensorProvider].getUnit();
+
+    return await this.repository.getHighestGlucose({
+      unit: unit,
+      hours: params.hours,
+      provider: this.config.sensorProvider,
+    });
   }
 
-  async getLowestGlucose(): Promise<GetLowestGlucoseResponse> {
-    this.checkAvailability();
-    throw new NotImplementedException();
+  async getLowestGlucose(
+    params: GetAverageGlucoseQuery,
+  ): Promise<GetLowestGlucoseResponse> {
+    this.ensureAvailable();
+    const unit =
+      await this.serviceByProvider[this.config.sensorProvider].getUnit();
+
+    return await this.repository.getLowestGlucose({
+      unit: unit,
+      hours: params.hours,
+      provider: this.config.sensorProvider,
+    });
   }
 }

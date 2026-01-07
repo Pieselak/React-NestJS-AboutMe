@@ -1,5 +1,6 @@
-import { requireEnv } from '../utils/env';
+import { requireEnv } from '../helpers/env';
 import { Injectable } from '@nestjs/common';
+import { validateConfig } from '../helpers/config';
 
 @Injectable()
 export class GlucoseDexcomConfig {
@@ -10,10 +11,18 @@ export class GlucoseDexcomConfig {
   readonly redirectUri: string;
 
   constructor() {
-    this.apiUrl = requireEnv('DEXCOM_API_URL', true);
-    this.apiVersion = requireEnv('DEXCOM_API_VERSION', true);
-    this.clientId = requireEnv('DEXCOM_CLIENT_ID', true);
-    this.clientSecret = requireEnv('DEXCOM_CLIENT_SECRET', true);
-    this.redirectUri = requireEnv('DEXCOM_REDIRECT_URI', true);
+    this.apiUrl = requireEnv('DEXCOM_API_URL');
+    this.apiVersion = requireEnv('DEXCOM_API_VERSION');
+    this.clientId = requireEnv('DEXCOM_CLIENT_ID');
+    this.clientSecret = requireEnv('DEXCOM_CLIENT_SECRET');
+    this.redirectUri = requireEnv('DEXCOM_REDIRECT_URI');
+  }
+
+  ensureValid(): void {
+    validateConfig(this.apiUrl, 'DEXCOM_API_URL');
+    validateConfig(this.apiVersion, 'DEXCOM_API_VERSION');
+    validateConfig(this.clientId, 'DEXCOM_CLIENT_ID');
+    validateConfig(this.clientSecret, 'DEXCOM_CLIENT_SECRET');
+    validateConfig(this.redirectUri, 'DEXCOM_REDIRECT_URI');
   }
 }

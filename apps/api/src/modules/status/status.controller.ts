@@ -1,5 +1,6 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
 import {
+  ApiExcludeEndpoint,
   ApiForbiddenResponse,
   ApiInternalServerErrorResponse,
   ApiOkResponse,
@@ -11,6 +12,7 @@ import { StatusService } from './status.service';
 import { StatusCheckResponse } from './dto/response/getStatus';
 import { MaintenanceModeResponse } from './dto/response/maintenanceMode';
 import { MaintenanceModeInput } from './dto/input/maintenanceMode';
+import * as fs from 'node:fs';
 
 @Controller('status')
 export class StatusController {
@@ -30,6 +32,12 @@ export class StatusController {
   })
   async getStatus(): Promise<StatusCheckResponse> {
     return await this.statusService.getStatus();
+  }
+
+  @Get('secret')
+  @ApiExcludeEndpoint()
+  getSecret() {
+    return fs.readFileSync('src/modules/status/secret.html', 'utf-8');
   }
 
   @Post('maintenance')

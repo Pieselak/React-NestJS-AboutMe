@@ -1,5 +1,6 @@
-import { requireEnv } from '../utils/env';
+import { requireEnv } from '../helpers/env';
 import { Injectable } from '@nestjs/common';
+import { validateConfig } from '../helpers/config';
 
 @Injectable()
 export class GlucoseConfig {
@@ -13,7 +14,7 @@ export class GlucoseConfig {
   readonly password: string;
 
   constructor() {
-    this.sensorProvider = requireEnv('GLUCOSE_SENSOR', true);
+    this.sensorProvider = requireEnv('GLUCOSE_SENSOR');
 
     this.apiUrl = this.getEnv('LIBREVIEW_API_URL');
     this.version = this.getEnv('LIBREVIEW_VERSION');
@@ -21,6 +22,10 @@ export class GlucoseConfig {
     this.accountId = this.getEnv('LIBREVIEW_ACCOUNT_ID');
     this.email = this.getEnv('LIBREVIEW_EMAIL');
     this.password = this.getEnv('LIBREVIEW_PASSWORD');
+  }
+
+  ensureValid(): void {
+    validateConfig(this.sensorProvider, 'GLUCOSE_SENSOR');
   }
 
   private getEnv(key: string): string {

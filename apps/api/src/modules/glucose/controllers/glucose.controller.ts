@@ -1,21 +1,18 @@
-import {
-  Controller,
-  Get,
-  NotImplementedException,
-  ServiceUnavailableException,
-} from '@nestjs/common';
+import { Controller, Get, Query, Res } from '@nestjs/common';
 import { GlucoseService } from '../services/glucose.service';
 import {
   ApiInternalServerErrorResponse,
   ApiOkResponse,
   ApiOperation,
   ApiServiceUnavailableResponse,
+  ApiTags,
 } from '@nestjs/swagger';
 import { GetCurrentGlucoseResponse } from '../dto/response/getCurrentGlucose';
 import { GetGraphDataResponse } from '../dto/response/getGraphData';
 import { GetSensorDataResponse } from '../dto/response/getSensorData';
 
 @Controller('glucose')
+@ApiTags('Glucose Data')
 export class GlucoseController {
   constructor(private readonly glucoseService: GlucoseService) {}
 
