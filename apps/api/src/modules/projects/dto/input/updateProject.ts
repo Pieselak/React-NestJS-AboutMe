@@ -1,4 +1,4 @@
-export class UpdateProjectDto {
+export class UpdateProjectBody {
   uuid: string;
   status: 'PLANNED' | 'IN_PROGRESS' | 'COMPLETED' | 'ON_HOLD' | 'CANCELLED';
   title: string;

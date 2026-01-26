@@ -1,4 +1,4 @@
-export class CreateProjectDto {
+export class CreateProjectBody {
   status: 'PLANNED' | 'IN_PROGRESS' | 'COMPLETED' | 'ON_HOLD' | 'CANCELLED';
   title: string;
   shortDescription: string;

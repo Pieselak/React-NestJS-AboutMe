@@ -8,9 +8,9 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
-import { CreateProjectDto } from './dto/createProject';
-import { UpdateProjectDto } from './dto/updateProject';
-import { GetProjectResponse } from './responses/getProject';
+import { CreateProjectBody } from './dto/input/createProject';
+import { UpdateProjectBody } from './dto/input/updateProject';
+import { GetProjectResponse } from './dto/response/getProject';
 import {
   ApiForbiddenResponse,
   ApiInternalServerErrorResponse,
@@ -20,8 +20,8 @@ import {
   ApiServiceUnavailableResponse,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { UpdateProjectResponse } from './responses/updateProject';
-import { CreateProjectResponse } from './responses/createProject';
+import { UpdateProjectResponse } from './dto/response/updateProject';
+import { CreateProjectResponse } from './dto/response/createProject';
 import { ProjectsService } from './project.service';
 
 @Controller('projects')
@@ -92,7 +92,7 @@ export class ProjectsController {
   @ApiServiceUnavailableResponse({
     description: 'Service is unavailable',
   })
-  createProject(@Body() body: CreateProjectDto): CreateProjectResponse {
+  createProject(@Body() body: CreateProjectBody): CreateProjectResponse {
     throw new NotImplementedException();
   }
 
@@ -123,7 +123,7 @@ export class ProjectsController {
   })
   updateProject(
     @Param('id') id: string,
-    @Body() body: UpdateProjectDto,
+    @Body() body: UpdateProjectBody,
   ): UpdateProjectResponse {
     throw new NotImplementedException();
   }

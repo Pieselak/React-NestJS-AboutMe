@@ -12,7 +12,6 @@ import { AxiosResponse } from 'axios';
 import { ThrottlerException } from '@nestjs/throttler';
 import { Cache, CACHE_MANAGER } from '@nestjs/cache-manager';
 import { clearTimeout } from 'node:timers';
-import { IGlucoseService } from '../glucose.service';
 import { GlucoseProviders } from '../../glucose.enum';
 import { GLUCOSE_CONSTANTS } from '../../../../constants/glucose.constants';
 import { GlucoseLibreConfig } from '../../../../config/glucose-libre.config';
@@ -22,6 +21,7 @@ import { GetSensorDataResponse } from '../../dto/response/getSensorData';
 import { GlucoseLibreAuthService } from './libreAuth.service';
 import { GlucoseRepository } from '../../repositories/glucose.repository';
 import { GlucoseLibreTransformer } from './libre.transformer';
+import { GlucoseData, IGlucoseService } from '../../glucose.types';
 
 interface LibreAPIGlucoseFormat {
   FactoryTimestamp: string;
@@ -62,14 +62,6 @@ export interface LibreAPIResponse {
   };
   activeSensors: LibreAPISensorFormat[];
   graphData: LibreAPIGlucoseFormat[];
-}
-
-export interface GlucoseData {
-  timestamp: number;
-  unit: string;
-  currentGlucose: GetCurrentGlucoseResponse;
-  graphData: GetGraphDataResponse;
-  sensorData: GetSensorDataResponse;
 }
 
 @Injectable()
@@ -159,7 +151,7 @@ export class GlucoseLibreService implements IGlucoseService {
       }
     }
 
-    const refresh = this.glucoseRefreshAt - currentTimestamp;
+    const refresh = this.glucoseRefreshAt! - currentTimestamp;
     this.glucoseFetchTimeout = setTimeout(
       () => this.scheduleFetchGlucose(),
       refresh,
@@ -265,50 +257,58 @@ export class GlucoseLibreService implements IGlucoseService {
   async getUnit(): Promise<string> {
     this.ensureAvailable();
     await this.ensureFetched();
-    if (this.glucoseData?.unit) {
-      return this.glucoseData.unit;
+
+    if (!this.glucoseData?.unit) {
+      throw new ServiceUnavailableException(
+        'Glucose unit data is not available.',
+      );
     }
-    throw new ServiceUnavailableException(
-      'Glucose unit data is not available.',
-    );
+
+    return this.glucoseData.unit;
   }
 
   async getCurrentGlucose(): Promise<GetCurrentGlucoseResponse> {
     this.ensureAvailable();
     await this.ensureFetched();
-    if (this.glucoseData?.currentGlucose) {
-      const response = this.glucoseData.currentGlucose;
-      response.refreshAt = this.getRefreshAt();
-      response.refreshIn = this.getRefreshIn();
-      return response;
+
+    if (!this.glucoseData?.currentGlucose) {
+      throw new ServiceUnavailableException(
+        'Current glucose data is not available.',
+      );
     }
-    throw new ServiceUnavailableException(
-      'Current glucose data is not available.',
-    );
+
+    const response = this.glucoseData.currentGlucose;
+    response.refreshAt = this.getRefreshAt();
+    response.refreshIn = this.getRefreshIn();
+    return response;
   }
 
   async getGraphData(): Promise<GetGraphDataResponse> {
     this.ensureAvailable();
     await this.ensureFetched();
-    if (this.glucoseData?.graphData) {
-      const response = this.glucoseData.graphData;
-      response.refreshAt = this.getRefreshAt();
-      response.refreshIn = this.getRefreshIn();
-      return response;
+
+    if (!this.glucoseData?.graphData) {
+      throw new ServiceUnavailableException(
+        'Graph glucose data is not available.',
+      );
     }
-    throw new ServiceUnavailableException(
-      'Graph glucose data is not available.',
-    );
+
+    const response = this.glucoseData.graphData;
+    response.refreshAt = this.getRefreshAt();
+    response.refreshIn = this.getRefreshIn();
+    return response;
   }
 
   async getSensorData(): Promise<GetSensorDataResponse> {
     this.ensureAvailable();
     await this.ensureFetched();
-    if (this.glucoseData?.sensorData) {
-      return this.glucoseData.sensorData;
+
+    if (!this.glucoseData?.sensorData) {
+      throw new ServiceUnavailableException(
+        'Sensor glucose data is not available.',
+      );
     }
-    throw new ServiceUnavailableException(
-      'Sensor glucose data is not available.',
-    );
+
+    return this.glucoseData.sensorData;
   }
 }

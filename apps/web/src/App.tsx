@@ -1,9 +1,10 @@
 import "@/i18n";
 import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
 
-import { HomePage } from "@/app/modules/User/Home/Home.page.tsx";
+// import { HomePage } from "@/app/modules/User/Home/Home.page.tsx";
 // import { AboutMePage } from "@/app/modules/User/AboutMe/AboutMe.page.tsx";
-import { MyProjectsPage } from "@/app/modules/User/MyProjects/MyProjects.page.tsx";
+import { MyProjectsListPage } from "@/app/modules/User/MyProjects/MyProjectsList.tsx";
+import { MyProjectsDetailsPage } from "@/app/modules/User/MyProjects/MyProjectsDetails.tsx";
 import { MyGlucosePage } from "@/app/modules/User/MyGlucose/MyGlucose.page.tsx";
 import { SelectLanguagePage } from "@/app/modules/User/SelectLanguage/SelectLanguage.page.tsx";
 
@@ -36,14 +37,35 @@ function App() {
           <Route path="f" element={<ForbiddenPage />} />
           <Route path="l" element={<LoadingPage />} />
           <Route index element={<Navigate to="home" />} />
-          <Route path="home" element={<HomePage />} />
+          <Route
+            path="home"
+            element={<UnderConstructionPage /> /*<HomePage />*/}
+          />
           <Route
             path="about"
             element={<UnderConstructionPage /> /*<AboutMePage />*/}
           />
-          <Route path="projects/:projectId?" element={<MyProjectsPage />} />
+          <Route path="projects">
+            <Route index element={<MyProjectsListPage />} />
+            <Route path=":projectId" element={<MyProjectsDetailsPage />} />
+          </Route>
           <Route path="sugar" element={<MyGlucosePage />} />
           <Route path="language" element={<SelectLanguagePage />} />
+          <Route path="login" />
+          <Route path="logout" />
+          <Route path="admin">
+            <Route index element={<Navigate to="dashboard" />} />
+            <Route index path="dashboard" element={<UnderConstructionPage />} />
+            <Route path="users">
+              <Route index element={<UnderConstructionPage />} />
+              <Route path=":userId" element={<UnderConstructionPage />} />
+            </Route>
+            <Route path="users">
+              <Route index element={<UnderConstructionPage />} />
+              <Route path=":projectId" element={<UnderConstructionPage />} />
+            </Route>
+            <Route path="settings" element={<UnderConstructionPage />} />
+          </Route>
           <Route path="*" element={<NotFoundPage />} />
         </Route>
       </Routes>

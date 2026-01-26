@@ -38,11 +38,15 @@ export function UserLayout() {
         ) : (
           <UserHeader navigationItems={navigationItems} />
         )}
+
         <motion.main
           key={location.pathname}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
+          initial={{ opacity: 0, transform: "scale(0.8)" }}
+          animate={{ opacity: 1, transform: "scale(1)" }}
+          transition={{
+            opacity: { duration: 0.2 },
+            transform: { duration: 0.25 },
+          }}
           className="flex flex-1 m-3 max-w-5xl justify-center items-start overflow-hidden"
         >
           <Outlet />

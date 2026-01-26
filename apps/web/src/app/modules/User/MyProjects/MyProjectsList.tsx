@@ -1,14 +1,14 @@
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
-import type { Project } from "@/app/modules/User/MyProjects/MyProjects.page.tsx";
 import { Link } from "react-router-dom";
+import {
+  type Project,
+  projects,
+} from "@/app/modules/User/MyProjects/MyProjects.enums.ts";
 
-type MyProjectsListProps = {
-  projects: Project[];
-};
-
-export function MyProjectsList({ projects }: MyProjectsListProps) {
+export function MyProjectsListPage() {
   const { t } = useTranslation();
+
   const projectsVariants = {
     hidden: { opacity: 0, y: -10 },
     visible: (i: number) => ({
@@ -24,7 +24,7 @@ export function MyProjectsList({ projects }: MyProjectsListProps) {
   };
 
   return (
-    <>
+    <div className="flex flex-col gap-2.5 justify-start items-center p-3 bg-card border-2 border-border rounded-xl md:flex-nowrap">
       <div className="flex flex-col justify-center items-center">
         <h1 className="text-2xl font-bold text-primary text-center">
           {t("user.myProjectsPage.title")}
@@ -33,9 +33,9 @@ export function MyProjectsList({ projects }: MyProjectsListProps) {
           {t("user.myProjectsPage.description")}
         </h2>
       </div>
-      {projects.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 max-w-7xl">
-          {projects.map((project, index) => (
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 max-w-7xl">
+        {projects.length > 0 ? (
+          projects.map((project: Project, index) => (
             <motion.div
               key={project.id}
               custom={index}
@@ -91,15 +91,13 @@ export function MyProjectsList({ projects }: MyProjectsListProps) {
                 </div>
               </Link>
             </motion.div>
-          ))}
-        </div>
-      ) : (
-        <>
+          ))
+        ) : (
           <p className="bg-gray-bg border-2 border-gray-border text-gray-text px-2 py-1 rounded-md">
             {t("user.myProjectsPage.noProjects")}
           </p>
-        </>
-      )}
-    </>
+        )}
+      </div>
+    </div>
   );
 }

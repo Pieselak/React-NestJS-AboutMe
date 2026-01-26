@@ -1,25 +1,26 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ProjectEntity } from './entities/project.entity';
-import { ProjectStatusEntity } from './entities/projectStatus.entity';
-import { ProjectStatusColorEntity } from './entities/projectStatusColor.entity';
-import { ProjectTagEntity } from './entities/projectTag.entity';
 import { Repository } from 'typeorm';
+import { GetProjectResponse } from './dto/response/getProject';
 
 @Injectable()
 export class ProjectsRepository {
   constructor(
     @InjectRepository(ProjectEntity)
     private readonly projectRepo: Repository<ProjectEntity>,
-    @InjectRepository(ProjectStatusEntity)
-    private readonly projectStatusRepo: Repository<ProjectStatusEntity>,
-    @InjectRepository(ProjectStatusColorEntity)
-    private readonly projectStatusColorRepo: Repository<ProjectStatusColorEntity>,
-    @InjectRepository(ProjectTagEntity)
-    private readonly projectTagRepo: Repository<ProjectTagEntity>,
   ) {}
 
-  async findAllProjects(): Promise<ProjectEntity[]> {
-    return this.projectRepo.find();
-  }
+  // async findAllProjects(): Promise<GetProjectResponse[]> {
+  //   return this.projectRepo.find({
+  //     relations: ['status', 'tags', 'developers'],
+  //   });
+  // }
+  //
+  // async findProjectByUuid(uuid: string): Promise<GetProjectResponse | null> {
+  //   return await this.projectRepo.findOne({
+  //     where: { uuid },
+  //     relations: ['status', 'tags', 'developers'],
+  //   }));
+  // }
 }

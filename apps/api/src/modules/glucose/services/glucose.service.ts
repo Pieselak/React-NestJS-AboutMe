@@ -17,14 +17,7 @@ import { GetLowestGlucoseResponse } from '../dto/response/getLowestGlucose';
 import { GetTimeInRangeQuery } from '../dto/input/getTimeInRange';
 import { GetAverageGlucoseQuery } from '../dto/input/getAverageGlucose';
 import { GlucoseRepository } from '../repositories/glucose.repository';
-
-export interface IGlucoseService {
-  init(): Promise<void>;
-  getUnit(): Promise<string>;
-  getCurrentGlucose(): Promise<GetCurrentGlucoseResponse>;
-  getGraphData(): Promise<GetGraphDataResponse>;
-  getSensorData(): Promise<GetSensorDataResponse>;
-}
+import { IGlucoseService } from '../glucose.types';
 
 @Injectable()
 export class GlucoseService {

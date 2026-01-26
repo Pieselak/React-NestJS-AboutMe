@@ -7,7 +7,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { GlucoseEntity } from '../entities/glucose.entity';
 import { Repository, SelectQueryBuilder } from 'typeorm';
 import { GetTimeInRangeResponse } from '../dto/response/getTimeInRange';
-import { GetAverageResponse } from '../../oldGlucose/responses/getAverage';
 import { GetHighestGlucoseResponse } from '../dto/response/getHighestGlucose';
 import { GetLowestGlucoseResponse } from '../dto/response/getLowestGlucose';
 import { GetAverageGlucoseResponse } from '../dto/response/getAverageGlucose';
