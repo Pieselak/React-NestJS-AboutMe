@@ -8,14 +8,14 @@ import {
   ApiServiceUnavailableResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { GetTimeInRangeResponse } from '../dto/response/getTimeInRange';
-import { GetAverageGlucoseResponse } from '../dto/response/getAverageGlucose';
-import { GetHighestGlucoseResponse } from '../dto/response/getHighestGlucose';
-import { GetLowestGlucoseResponse } from '../dto/response/getLowestGlucose';
-import { GetTimeInRangeQuery } from '../dto/input/getTimeInRange';
-import { GetAverageGlucoseQuery } from '../dto/input/getAverageGlucose';
-import { GetHighestGlucoseQuery } from '../dto/input/getHighestGlucose';
-import { GetLowestGlucoseQuery } from '../dto/input/getLowestGlucose';
+import { GetTimeInRangeResponse } from '../dto/response/getTimeInRange.dto';
+import { GetAverageGlucoseResponse } from '../dto/response/getAverageGlucose.dto';
+import { GetHighestGlucoseResponse } from '../dto/response/getHighestGlucose.dto';
+import { GetLowestGlucoseResponse } from '../dto/response/getLowestGlucose.dto';
+import { GetTimeInRangeQuery } from '../dto/input/getTimeInRange.dto';
+import { GetAverageGlucoseQuery } from '../dto/input/getAverageGlucose.dto';
+import { GetHighestGlucoseQuery } from '../dto/input/getHighestGlucose.dto';
+import { GetLowestGlucoseQuery } from '../dto/input/getLowestGlucose.dto';
 
 @Controller('glucose/statistics')
 @ApiTags('Glucose Statistics')
