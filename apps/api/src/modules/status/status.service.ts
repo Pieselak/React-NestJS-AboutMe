@@ -1,8 +1,11 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
-import { ServiceStatus, StatusCheckResponse } from './dto/response/getStatus';
+import {
+  ServiceStatus,
+  StatusCheckResponse,
+} from './dto/response/getStatus.dto';
 import { StatusRepository } from './status.repository';
-import { MaintenanceModeInput } from './dto/input/maintenanceMode';
-import { MaintenanceModeResponse } from './dto/response/maintenanceMode';
+import { MaintenanceModeInput } from './dto/input/maintenanceMode.dto';
+import { MaintenanceModeResponse } from './dto/response/maintenanceMode.dto';
 
 @Injectable()
 export class StatusService {

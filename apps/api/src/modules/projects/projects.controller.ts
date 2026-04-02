@@ -8,9 +8,9 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
-import { CreateProjectBody } from './dto/input/createProject';
-import { UpdateProjectBody } from './dto/input/updateProject';
-import { GetProjectResponse } from './dto/response/getProject';
+import { CreateProjectBody } from './dto/input/createProject.dto';
+import { UpdateProjectBody } from './dto/input/updateProject.dto';
+import { GetProjectResponse } from './dto/response/getProject.dto';
 import {
   ApiForbiddenResponse,
   ApiInternalServerErrorResponse,
@@ -20,8 +20,8 @@ import {
   ApiServiceUnavailableResponse,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { UpdateProjectResponse } from './dto/response/updateProject';
-import { CreateProjectResponse } from './dto/response/createProject';
+import { UpdateProjectResponse } from './dto/response/updateProject.dto';
+import { CreateProjectResponse } from './dto/response/createProject.dto';
 import { ProjectsService } from './project.service';
 
 @Controller('projects')

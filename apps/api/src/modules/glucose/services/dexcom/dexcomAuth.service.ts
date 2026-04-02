@@ -9,9 +9,9 @@ import {
 import { GlucoseDexcomConfig } from '../../../../config/glucose-dexcom.config';
 import { HttpService } from '@nestjs/axios';
 import { lastValueFrom } from 'rxjs';
-import { BuildDexcomOAuthURLResponse } from '../../dto/response/buildDexcomOAuthURL';
-import { HandleDexcomOAuthResponse } from '../../dto/response/handleDexcomOAuth';
-import { HandleDexcomOAuthQuery } from '../../dto/input/handleDexcomOAuth';
+import { BuildDexcomOAuthURLResponse } from '../../dto/response/buildDexcomOAuthURL.dto';
+import { HandleDexcomOAuthResponse } from '../../dto/response/handleDexcomOAuth.dto';
+import { HandleDexcomOAuthQuery } from '../../dto/input/handleDexcomOAuth.dto';
 import { GlucoseDexcomRepository } from '../../repositories/dexcom.repository';
 import { Cache, CACHE_MANAGER } from '@nestjs/cache-manager';
 import { GLUCOSE_CONSTANTS } from '../../../../constants/glucose.constants';

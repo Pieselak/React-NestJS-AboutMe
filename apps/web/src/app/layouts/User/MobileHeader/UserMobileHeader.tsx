@@ -8,9 +8,9 @@ import {
 } from "lucide-react";
 import type { navigationItem } from "@/app/layouts/User/User.layout.tsx";
 import { Link, useLocation } from "react-router-dom";
-import useThemeMode from "@/app/hooks/useThemeMode.ts";
 import { useTranslation } from "react-i18next";
 import { motion, AnimatePresence } from "framer-motion";
+import useTheme from "@/app/hooks/useTheme.ts";
 
 type UserMobileHeaderProps = {
   navigationItems: navigationItem[];
@@ -18,7 +18,7 @@ type UserMobileHeaderProps = {
 
 export function UserMobileHeader({ navigationItems }: UserMobileHeaderProps) {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [themeMode, setThemeMode] = useThemeMode();
+  const [theme, setTheme] = useTheme();
   const { pathname } = useLocation();
   const { t } = useTranslation();
 
@@ -30,11 +30,7 @@ export function UserMobileHeader({ navigationItems }: UserMobileHeaderProps) {
 
   const itemVariants = {
     hidden: { opacity: 0, x: -20 },
-    visible: (i: number) => ({
-      opacity: 1,
-      x: 0,
-      transition: { delay: i * 0.1 },
-    }),
+    visible: { opacity: 1, x: 0 },
   };
 
   return (
@@ -48,14 +44,14 @@ export function UserMobileHeader({ navigationItems }: UserMobileHeaderProps) {
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          onClick={() => {
-            setMenuOpen(true);
-          }}
-          className="flex items-center p-2.5 bg-card rounded-xl border-2 border-border hover:border-ring cursor-pointer transition-[border-color] duration-250"
+          onClick={() => setMenuOpen(true)}
+          className="flex items-center p-2.5 bg-card rounded-xl border border-border hover:border-ring cursor-pointer transition-[border-color] duration-250"
+          aria-label={t("user.nav.open")}
         >
           <MenuIcon className="size-4.5" />
         </motion.button>
       </motion.div>
+
       <AnimatePresence>
         {menuOpen && (
           <motion.div
@@ -63,7 +59,7 @@ export function UserMobileHeader({ navigationItems }: UserMobileHeaderProps) {
             animate="visible"
             exit="exit"
             variants={menuVariants}
-            className="fixed flex flex-col justify-center items-center top-0 w-full p-3 gap-2.5 bg-card/70 backdrop-blur-sm border-b-2 border-border"
+            className="fixed flex flex-col justify-start items-center top-0 w-full min-h-dvh p-3 gap-2.5 bg-background/90 backdrop-blur-sm border-b border-border"
           >
             <div className="flex flex-row items-center justify-between w-full gap-2">
               <motion.button
@@ -72,29 +68,34 @@ export function UserMobileHeader({ navigationItems }: UserMobileHeaderProps) {
                 onClick={() => {
                   setMenuOpen(false);
                 }}
-                className="flex items-center p-2.5 bg-card rounded-xl border-2 border-border hover:border-ring cursor-pointer transition-[border-color] duration-250"
+                className="flex items-center p-2.5 bg-card rounded-xl border border-border hover:border-ring cursor-pointer transition-[border-color] duration-250"
+                aria-label={t("user.nav.close")}
               >
                 <XIcon className="size-4.5" />
               </motion.button>
               <div className="flex justify-between items-center gap-2.5">
-                <motion.button
+                <motion.div
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="flex items-center p-2.5 bg-card rounded-xl border-2 border-border hover:border-ring cursor-pointer transition-[border-color] duration-250"
+                  className="flex items-center bg-card rounded-xl border border-border hover:border-ring cursor-pointer transition-[border-color] duration-250"
                 >
-                  <Link to="/language">
+                  <Link
+                    to="/language"
+                    className="p-2.5"
+                    aria-label={t("user.nav.language")}
+                    onClick={() => setMenuOpen(false)}
+                  >
                     <LanguagesIcon className="size-4.5" />
                   </Link>
-                </motion.button>
+                </motion.div>
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="flex items-center p-2.5 bg-card rounded-xl border-2 border-border hover:border-ring cursor-pointer transition-[border-color] duration-250"
-                  onClick={() =>
-                    setThemeMode(themeMode === "light" ? "dark" : "light")
-                  }
+                  className="flex items-center p-2.5 bg-card rounded-xl border border-border hover:border-ring cursor-pointer transition-[border-color] duration-250"
+                  onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+                  aria-label={t("user.nav.theme")}
                 >
-                  {themeMode === "light" ? (
+                  {theme === "light" ? (
                     <MoonStarIcon className="size-4.5" />
                   ) : (
                     <SunIcon className="size-4.5" />
@@ -102,37 +103,39 @@ export function UserMobileHeader({ navigationItems }: UserMobileHeaderProps) {
                 </motion.button>
               </div>
             </div>
-            <nav className="flex w-full flex-col justify-center items-center gap-2">
+
+            <motion.nav
+              initial="hidden"
+              animate="visible"
+              transition={{ staggerChildren: 0.1 }}
+              className="flex w-full flex-col justify-center items-center gap-2"
+            >
               {navigationItems.map((navigationItem, index) => (
                 <motion.div
                   key={navigationItem.url}
                   custom={index}
-                  initial="hidden"
-                  animate="visible"
                   variants={itemVariants}
                   whileHover={{ scale: 1.01 }}
                   whileTap={{ scale: 0.99 }}
-                  style={{
-                    transition: `border-color 0.25s ease, background-color 0.25s ease`,
-                  }}
-                  className={`w-full border border-border rounded-md hover:border-ring cursor-pointe ${
-                    pathname.split("/")[1] === navigationItem.url.substring(1)
-                      ? "bg-accent/30 border-ring text-accent-foreground"
-                      : ""
-                  }`}
+                  onClick={() => setMenuOpen(false)}
+                  className={`w-full`}
                 >
                   <Link
                     to={navigationItem.url}
-                    className={"flex gap-3 items-center px-3 py-2"}
+                    className={`flex gap-3 items-center px-3 py-2 w-full border border-border rounded-md hover:border-ring cursor-pointer transition-[border-color, background-color] duration-250 ${
+                      pathname.split("/")[1] === navigationItem.url.substring(1)
+                        ? "bg-muted border-ring text-accent-foreground"
+                        : "bg-card"
+                    }`}
                   >
                     {navigationItem.icon && (
                       <navigationItem.icon className="size-4.5" />
                     )}
-                    {t(`user.nav.${navigationItem.label}`)}
+                    {t(`user.nav.pages.${navigationItem.label}`)}
                   </Link>
                 </motion.div>
               ))}
-            </nav>
+            </motion.nav>
           </motion.div>
         )}
       </AnimatePresence>

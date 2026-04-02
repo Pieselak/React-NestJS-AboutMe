@@ -1,4 +1,3 @@
-import { GlucoseData, LibreAPIResponse } from './libre.service';
 import { GLUCOSE_CONSTANTS } from '../../../../constants/glucose.constants';
 import {
   GlucoseColors,
@@ -7,34 +6,50 @@ import {
   GlucoseTrends,
   GlucoseUnits,
 } from '../../glucose.enum';
+import { GlucoseData } from '../../glucose.types';
+import { LibreApiResponse } from '../../dto/external/libreResponse.dto';
 
 export class GlucoseLibreTransformer {
   private transformTimestamp(timestamp: string): number {
     return new Date(`${timestamp} UTC`).getTime();
   }
 
-  transform(data: LibreAPIResponse): GlucoseData {
+  transform(data: LibreApiResponse): GlucoseData {
     const currentTimestamp = Date.now();
     const glucoseTimestamp = this.transformTimestamp(
       data.connection.glucoseMeasurement.FactoryTimestamp,
     );
 
-    const sensorIsActive = data.activeSensors.length > 0;
-    const sensorName: GlucoseSensors = GlucoseSensors.LIBRE_2; // HARD-CODED (Can not get Libre sensor generation from API)
-    const sensorImage: string = GLUCOSE_CONSTANTS.IMAGES.LIBRE;
-    let sensorExpireAt: number = 0;
-    let sensorExpireIn: number = 0;
-    if (sensorIsActive) {
-      sensorExpireAt =
-        currentTimestamp +
-        data.activeSensors[0].sensor.a * GLUCOSE_CONSTANTS.SEC_TO_MS;
-      sensorExpireIn = sensorExpireAt - currentTimestamp;
-    }
+    // [ Sensor Data ]
+    // Is sensor active
+    const sensorIsActive: boolean = data.activeSensors.length > 0;
+    // Sensor name
+    const sensorName: GlucoseSensors | null = sensorIsActive
+      ? GlucoseSensors.LIBRE
+      : null; // HARD-CODED (Can not get Libre sensor generation from API)
+    // Sensor image
+    const sensorImage: string | null = sensorIsActive
+      ? GLUCOSE_CONSTANTS.IMAGES.LIBRE
+      : null;
+    // Sensor expire at
+    const sensorExpireAt: number | null = sensorIsActive
+      ? currentTimestamp +
+        data.activeSensors[0].sensor.a * GLUCOSE_CONSTANTS.SEC_TO_MS
+      : null;
+    // Sensor expire in
+    let sensorExpireIn: number | null =
+      sensorIsActive && sensorExpireAt
+        ? sensorExpireAt - currentTimestamp
+        : null;
 
+    // [ Current Glucose ]
+    // Is glucose current (up to date)
     const glucoseIsCurrent =
       sensorIsActive &&
       currentTimestamp - glucoseTimestamp >
         GLUCOSE_CONSTANTS.LIBRE.FETCH_TIMEOUT_MS;
+
+    // Glucose unit
     let glucoseUnit: GlucoseUnits;
     switch (data.connection.glucoseMeasurement.GlucoseUnits) {
       case 0:
@@ -46,6 +61,7 @@ export class GlucoseLibreTransformer {
         break;
     }
 
+    // Glucose color
     let glucoseColor: GlucoseColors;
     switch (data.connection.glucoseMeasurement.MeasurementColor) {
       case 1:
@@ -67,6 +83,7 @@ export class GlucoseLibreTransformer {
     }
     if (!glucoseIsCurrent) glucoseColor = GlucoseColors.NONE;
 
+    // Glucose trend
     let glucoseTrend: GlucoseTrends;
     switch (data.connection.glucoseMeasurement.TrendArrow) {
       case 1:
@@ -89,6 +106,7 @@ export class GlucoseLibreTransformer {
     }
     if (!glucoseIsCurrent) glucoseTrend = GlucoseTrends.NONE;
 
+    // Glucose status
     let glucoseStatus: GlucoseStatus = GlucoseStatus.COMPUTABLE;
     if (data.connection.glucoseMeasurement.isHigh) {
       glucoseStatus = GlucoseStatus.HIGH;
@@ -112,6 +130,7 @@ export class GlucoseLibreTransformer {
       },
       graphData: {
         data: data.graphData.map((reading) => {
+          // Glucose unit
           let graphUnit: GlucoseUnits;
           switch (reading.GlucoseUnits) {
             case 0:
@@ -123,6 +142,7 @@ export class GlucoseLibreTransformer {
               break;
           }
 
+          // Glucose color
           let graphColor: GlucoseColors;
           switch (reading.MeasurementColor) {
             case 1:
@@ -143,6 +163,7 @@ export class GlucoseLibreTransformer {
               break;
           }
 
+          // Glucose status
           let graphStatus: GlucoseStatus = GlucoseStatus.COMPUTABLE;
           if (reading.isHigh) {
             graphStatus = GlucoseStatus.HIGH;
@@ -167,11 +188,11 @@ export class GlucoseLibreTransformer {
       },
       sensorData: {
         isActive: sensorIsActive,
-        name: sensorIsActive ? sensorName : null,
-        image: sensorIsActive ? sensorImage : null,
+        name: sensorName,
+        image: sensorImage,
         lastUploadAt: sensorIsActive ? glucoseTimestamp : null,
-        expireAt: sensorIsActive ? sensorExpireAt : null,
-        expireIn: sensorIsActive ? sensorExpireIn : null,
+        expireAt: sensorExpireAt,
+        expireIn: sensorExpireIn,
       },
     };
   }

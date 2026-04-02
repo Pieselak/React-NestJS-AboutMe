@@ -23,7 +23,7 @@ const navigationItems: navigationItem[] = [
   { label: "home", icon: HomeIcon, url: "/home" },
   { label: "aboutme", icon: UserIcon, url: "/about" },
   { label: "projects", icon: FoldersIcon, url: "/projects" },
-  { label: "sugar", icon: CandyIcon, url: "/sugar" },
+  { label: "glucose", icon: CandyIcon, url: "/glucose" },
 ];
 
 export function UserLayout() {
@@ -31,8 +31,8 @@ export function UserLayout() {
   const location = useLocation();
 
   return (
-    <MotionConfig transition={{ duration: 0.25 }}>
-      <div className="flex min-h-dvh flex-col justify-start items-center">
+    <MotionConfig transition={{ duration: 0.25, ease: "easeInOut" }}>
+      <div className="flex flex-col justify-start items-center min-h-dvh">
         {isMobile ? (
           <UserMobileHeader navigationItems={navigationItems} />
         ) : (
@@ -41,13 +41,13 @@ export function UserLayout() {
 
         <motion.main
           key={location.pathname}
-          initial={{ opacity: 0, transform: "scale(0.8)" }}
+          initial={{ opacity: 0, transform: "scale(1)" }}
           animate={{ opacity: 1, transform: "scale(1)" }}
           transition={{
             opacity: { duration: 0.2 },
             transform: { duration: 0.25 },
           }}
-          className="flex flex-1 m-3 max-w-5xl justify-center items-start overflow-hidden"
+          className="flex flex-1 justify-center items-start overflow-hidden p-3 pmax-w-6xl"
         >
           <Outlet />
         </motion.main>
