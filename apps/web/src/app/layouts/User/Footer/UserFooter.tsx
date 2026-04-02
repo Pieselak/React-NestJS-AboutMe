@@ -1,8 +1,7 @@
 import { useTranslation } from "react-i18next";
 import {
   CopyrightIcon,
-  GithubIcon,
-  LinkedinIcon,
+  LinkIcon,
   MailIcon,
   MonitorIcon,
   ServerCogIcon,
@@ -52,13 +51,13 @@ export function UserFooter() {
         <UserFooterItem
           title="Github"
           content="/Pieselak"
-          icon={GithubIcon}
+          icon={LinkIcon}
           url="https://github.com/Pieselak"
         />
         <UserFooterItem
           title="Linkedin"
           content="/patryk-znamirowski"
-          icon={LinkedinIcon}
+          icon={LinkIcon}
           url="https://www.linkedin.com/in/patryk-znamirowski"
         />
       </div>

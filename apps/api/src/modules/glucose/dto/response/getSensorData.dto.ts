@@ -14,7 +14,7 @@ export class GetSensorDataResponse {
     description: 'Name of the glucose sensor device',
     enum: GlucoseSensors,
     enumName: 'GlucoseSensor',
-    example: GlucoseSensors.LIBRE_2,
+    example: GlucoseSensors.LIBRE,
     nullable: true,
   })
   name: string | null;

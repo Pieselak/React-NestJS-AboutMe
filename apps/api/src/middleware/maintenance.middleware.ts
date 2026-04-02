@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { NextFunction, Request, Response } from 'express';
 import { StatusService } from '../modules/status/status.service';
-import { ServiceStatus } from '../modules/status/dto/response/getStatus';
+import { ServiceStatus } from '../modules/status/dto/response/getStatus.dto';
 
 @Injectable()
 export class MaintenanceMiddleware implements NestMiddleware {

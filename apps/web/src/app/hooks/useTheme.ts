@@ -1,13 +1,10 @@
 import { useEffect, useState } from "react";
 
-export default function useThemeMode() {
-  const [themeMode, setThemeMode] = useState<"light" | "dark">(() => {
+export default function useTheme() {
+  const [theme, setTheme] = useState<"light" | "dark">(() => {
     if (typeof window === "undefined") return "light";
 
-    const savedTheme = localStorage.getItem("themeMode") as
-      | "light"
-      | "dark"
-      | null;
+    const savedTheme = localStorage.getItem("theme") as "light" | "dark" | null;
 
     if (savedTheme) return savedTheme;
 
@@ -17,16 +14,16 @@ export default function useThemeMode() {
   });
 
   useEffect(() => {
-    document.documentElement.classList.toggle("dark", themeMode === "dark");
-    localStorage.setItem("themeMode", themeMode);
-  }, [themeMode]);
+    document.documentElement.classList.toggle("dark", theme === "dark");
+    localStorage.setItem("theme", theme);
+  }, [theme]);
 
   useEffect(() => {
     const mq = window.matchMedia("(prefers-color-scheme: dark)");
 
     const handler = (e: MediaQueryListEvent) => {
       const newTheme = e.matches ? "dark" : "light";
-      setThemeMode(newTheme);
+      setTheme(newTheme);
     };
 
     mq.addEventListener("change", handler);
@@ -34,5 +31,5 @@ export default function useThemeMode() {
     return () => mq.removeEventListener("change", handler);
   }, []);
 
-  return [themeMode, setThemeMode] as const;
+  return [theme, setTheme] as const;
 }

@@ -8,9 +8,9 @@ import {
   ApiServiceUnavailableResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { HandleDexcomOAuthQuery } from '../dto/input/handleDexcomOAuth';
-import { BuildDexcomOAuthURLResponse } from '../dto/response/buildDexcomOAuthURL';
-import { HandleDexcomOAuthResponse } from '../dto/response/handleDexcomOAuth';
+import { HandleDexcomOAuthQuery } from '../dto/input/handleDexcomOAuth.dto';
+import { BuildDexcomOAuthURLResponse } from '../dto/response/buildDexcomOAuthURL.dto';
+import { HandleDexcomOAuthResponse } from '../dto/response/handleDexcomOAuth.dto';
 import { Throttle } from '@nestjs/throttler';
 import { GlucoseLibreAuthService } from '../services/libre/libreAuth.service';
 

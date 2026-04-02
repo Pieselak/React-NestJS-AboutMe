@@ -7,9 +7,9 @@ import {
   ApiServiceUnavailableResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { GetCurrentGlucoseResponse } from '../dto/response/getCurrentGlucose';
-import { GetGraphDataResponse } from '../dto/response/getGraphData';
-import { GetSensorDataResponse } from '../dto/response/getSensorData';
+import { GetCurrentGlucoseResponse } from '../dto/response/getCurrentGlucose.dto';
+import { GetGraphDataResponse } from '../dto/response/getGraphData.dto';
+import { GetSensorDataResponse } from '../dto/response/getSensorData.dto';
 
 @Controller('glucose')
 @ApiTags('Glucose Data')

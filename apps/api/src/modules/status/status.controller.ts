@@ -9,9 +9,9 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { StatusService } from './status.service';
-import { StatusCheckResponse } from './dto/response/getStatus';
-import { MaintenanceModeResponse } from './dto/response/maintenanceMode';
-import { MaintenanceModeInput } from './dto/input/maintenanceMode';
+import { StatusCheckResponse } from './dto/response/getStatus.dto';
+import { MaintenanceModeResponse } from './dto/response/maintenanceMode.dto';
+import { MaintenanceModeInput } from './dto/input/maintenanceMode.dto';
 import * as fs from 'node:fs';
 
 @Controller('status')

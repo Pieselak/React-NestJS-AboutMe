@@ -1,5 +1,11 @@
 import "@/i18n";
-import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
+import {
+  Routes,
+  Route,
+  Navigate,
+  useNavigate,
+  useLocation,
+} from "react-router-dom";
 
 // import { HomePage } from "@/app/modules/User/Home/Home.page.tsx";
 // import { AboutMePage } from "@/app/modules/User/AboutMe/AboutMe.page.tsx";
@@ -17,16 +23,19 @@ import { UnderConstructionPage } from "@/app/modules/UnderConstruction/UnderCons
 import { UserLayout } from "@/app/layouts/User/User.layout.tsx";
 import { Suspense, useEffect } from "react";
 
-import i18n, { getSavedLanguage } from "@/i18n.ts";
+import i18n, { getFirstLanguageCode, getSavedLanguageCode } from "@/i18n.ts";
 
 function App() {
   const navigate = useNavigate();
-  const savedLanguage = getSavedLanguage();
+  const location = useLocation();
+  const savedLanguage = getSavedLanguageCode();
 
   useEffect(() => {
     !savedLanguage &&
-      navigate("/language?first-time=true", { state: { firstTime: true } });
-    i18n.changeLanguage(savedLanguage || "en");
+      navigate("/language", {
+        state: { langRedirect: location.pathname },
+      });
+    i18n.changeLanguage(savedLanguage || getFirstLanguageCode());
   }, []);
 
   return (
@@ -49,7 +58,10 @@ function App() {
             <Route index element={<MyProjectsListPage />} />
             <Route path=":projectId" element={<MyProjectsDetailsPage />} />
           </Route>
-          <Route path="sugar" element={<MyGlucosePage />} />
+          <Route path="glucose">
+            <Route index element={<Navigate to="graph" />} />
+            <Route path=":section" element={<MyGlucosePage />} />
+          </Route>
           <Route path="language" element={<SelectLanguagePage />} />
           <Route path="login" />
           <Route path="logout" />

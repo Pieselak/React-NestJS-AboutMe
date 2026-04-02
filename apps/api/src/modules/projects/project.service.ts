@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ProjectsRepository } from './projects.repository';
-import { GetProjectResponse } from './dto/response/getProject';
+import { GetProjectResponse } from './dto/response/getProject.dto';
 import { NotImplementedException } from '@nestjs/common';
 
 @Injectable()

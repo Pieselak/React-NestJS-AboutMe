@@ -4,8 +4,7 @@ export enum GlucoseProviders {
 }
 
 export enum GlucoseSensors {
-  LIBRE_2 = 'Freestyle Libre 2',
-  LIBRE_3 = 'Freestyle Libre 3',
+  LIBRE = 'Freestyle Libre',
   DEXCOM_G7 = 'Dexcom G7',
   DEXCOM_ONE = 'Dexcom One',
   DEXCOM_ONE_PLUS = 'Dexcom One Plus',

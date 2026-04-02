@@ -1,9 +1,10 @@
-import { GetCurrentGlucoseResponse } from './dto/response/getCurrentGlucose';
-import { GetGraphDataResponse } from './dto/response/getGraphData';
-import { GetSensorDataResponse } from './dto/response/getSensorData';
+import { GetCurrentGlucoseResponse } from './dto/response/getCurrentGlucose.dto';
+import { GetGraphDataResponse } from './dto/response/getGraphData.dto';
+import { GetSensorDataResponse } from './dto/response/getSensorData.dto';
 
 export interface IGlucoseService {
-  init(): Promise<void>;
+  initialize(): void;
+  isSensorActive(): Promise<boolean>;
   getUnit(): Promise<string>;
   getCurrentGlucose(): Promise<GetCurrentGlucoseResponse>;
   getGraphData(): Promise<GetGraphDataResponse>;

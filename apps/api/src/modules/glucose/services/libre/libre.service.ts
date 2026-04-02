@@ -4,6 +4,8 @@ import {
   Inject,
   Injectable,
   Logger,
+  OnModuleDestroy,
+  OnModuleInit,
   ServiceUnavailableException,
 } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
@@ -15,61 +17,21 @@ import { clearTimeout } from 'node:timers';
 import { GlucoseProviders } from '../../glucose.enum';
 import { GLUCOSE_CONSTANTS } from '../../../../constants/glucose.constants';
 import { GlucoseLibreConfig } from '../../../../config/glucose-libre.config';
-import { GetCurrentGlucoseResponse } from '../../dto/response/getCurrentGlucose';
-import { GetGraphDataResponse } from '../../dto/response/getGraphData';
-import { GetSensorDataResponse } from '../../dto/response/getSensorData';
+import { GetCurrentGlucoseResponse } from '../../dto/response/getCurrentGlucose.dto';
+import { GetGraphDataResponse } from '../../dto/response/getGraphData.dto';
+import { GetSensorDataResponse } from '../../dto/response/getSensorData.dto';
 import { GlucoseLibreAuthService } from './libreAuth.service';
 import { GlucoseRepository } from '../../repositories/glucose.repository';
 import { GlucoseLibreTransformer } from './libre.transformer';
 import { GlucoseData, IGlucoseService } from '../../glucose.types';
-
-interface LibreAPIGlucoseFormat {
-  FactoryTimestamp: string;
-  MeasurementColor: number;
-  GlucoseUnits: number;
-  Value: number;
-  isHigh: boolean;
-  isLow: boolean;
-}
-
-interface LibreAPIGlucoseMeasurement extends LibreAPIGlucoseFormat {
-  TrendArrow: number;
-}
-
-interface LibreAPISensorFormat {
-  sensor: {
-    a: number;
-  };
-}
-
-export interface LibreAPIResponse {
-  connection: {
-    targetLow: number;
-    targetHigh: number;
-    alarmRules: {
-      h: {
-        th: number;
-      };
-      l: {
-        th: number;
-      };
-    };
-    glucoseMeasurement: LibreAPIGlucoseMeasurement;
-    patientDevice: {
-      ll: number;
-      hl: number;
-    };
-  };
-  activeSensors: LibreAPISensorFormat[];
-  graphData: LibreAPIGlucoseFormat[];
-}
+import { LibreApiResponse } from '../../dto/external/libreResponse.dto';
 
 @Injectable()
-export class GlucoseLibreService implements IGlucoseService {
+export class GlucoseLibreService implements IGlucoseService, OnModuleDestroy {
   private readonly logger = new Logger(GlucoseLibreService.name);
 
-  private initFail = false;
-  private inFlight: Record<string, Promise<any> | null> = {};
+  private isAvailable = false;
+  private inFlight: Promise<any> | null = null;
 
   private glucoseFetchTimeout: NodeJS.Timeout | null = null;
   private glucoseData: GlucoseData | null = null;
@@ -84,18 +46,29 @@ export class GlucoseLibreService implements IGlucoseService {
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
-  async init() {
+  initialize(): void {
     try {
       this.config.ensureValid();
-      await this.scheduleFetchGlucose();
+      this.isAvailable = true;
+      this.logger.log('Libre Glucose service is available.');
     } catch (error) {
-      this.initFail = true;
+      this.isAvailable = false;
       this.logger.error(error instanceof Error ? error.message : error);
+      return;
+    }
+
+    this.scheduleFetchGlucose();
+  }
+
+  onModuleDestroy() {
+    this.isAvailable = false;
+    if (this.glucoseFetchTimeout) {
+      clearTimeout(this.glucoseFetchTimeout);
     }
   }
 
   private ensureAvailable(): void {
-    if (this.initFail) {
+    if (!this.isAvailable) {
       throw new ServiceUnavailableException(
         'Glucose Libre service is not available.',
       );
@@ -117,9 +90,8 @@ export class GlucoseLibreService implements IGlucoseService {
   }
 
   private async scheduleFetchGlucose() {
-    if (this.glucoseFetchTimeout) {
-      clearTimeout(this.glucoseFetchTimeout);
-    }
+    if (!this.isAvailable) return;
+    if (this.glucoseFetchTimeout) clearTimeout(this.glucoseFetchTimeout);
 
     const currentTimestamp = Date.now();
     const rateLimit = await this.cacheManager.get<number>(
@@ -161,7 +133,7 @@ export class GlucoseLibreService implements IGlucoseService {
 
   private async handleResponse(
     response: AxiosResponse,
-  ): Promise<LibreAPIResponse> {
+  ): Promise<LibreApiResponse> {
     switch (response.status) {
       case 200:
         break;
@@ -182,76 +154,73 @@ export class GlucoseLibreService implements IGlucoseService {
         throw new ServiceUnavailableException('Libre endpoint is unavailable.');
     }
 
-    const data = response.data.data;
+    const data = response.data?.data;
     if (!data) {
-      throw new ServiceUnavailableException('Invalid response from Libre.');
+      this.logger.error('Invalid response structure', response.data);
+      throw new ServiceUnavailableException(
+        'Invalid response structure from Libre.',
+      );
     }
 
     return data;
   }
 
   private async fetchGlucose() {
-    const promise =
-      this.inFlight[GLUCOSE_CONSTANTS.LIBRE.CACHE_KEYS.RATELIMIT_FETCH_GLUCOSE];
+    const promise = this.inFlight;
     if (promise) {
       return await promise;
     }
 
-    this.inFlight[GLUCOSE_CONSTANTS.LIBRE.CACHE_KEYS.RATELIMIT_FETCH_GLUCOSE] =
-      (async () => {
-        try {
-          const rateLimit = await this.cacheManager.get<number>(
-            GLUCOSE_CONSTANTS.LIBRE.CACHE_KEYS.RATELIMIT_FETCH_GLUCOSE,
+    this.inFlight = (async () => {
+      try {
+        const rateLimit = await this.cacheManager.get<number>(
+          GLUCOSE_CONSTANTS.LIBRE.CACHE_KEYS.RATELIMIT_FETCH_GLUCOSE,
+        );
+        if (rateLimit) {
+          throw new ThrottlerException(
+            `Rate limit exceeded, try in ${Math.max(0, rateLimit - Date.now())} seconds.`,
           );
-          if (rateLimit) {
-            throw new ThrottlerException(
-              `Rate limit exceeded, try in ${Math.max(0, rateLimit - Date.now())} seconds.`,
-            );
-          }
-          const { token, patientId } = await this.authService.getToken();
-          const response: AxiosResponse<LibreAPIResponse> = await lastValueFrom(
-            this.httpService.get(
-              `${this.config.apiUrl}/connections/${patientId}/graph`,
-              {
-                headers: {
-                  Authorization: token,
-                  product: this.config.product,
-                  version: this.config.version,
-                  'account-id': this.config.accountId,
-                },
-                validateStatus: () => true,
-              },
-            ),
-          );
-
-          const data = await this.handleResponse(response);
-          this.glucoseData = this.transformer.transform(data);
-
-          if (this.glucoseData?.currentGlucose) {
-            await this.repository.saveGlucoseMeasurement({
-              provider: GlucoseProviders.LIBRE,
-              unit: this.glucoseData?.unit,
-              value: this.glucoseData?.currentGlucose.value,
-              timestamp: new Date(this.glucoseData?.currentGlucose.timestamp),
-            });
-          }
-        } catch (error) {
-          this.logger.error(`Libre error: ${error?.message ?? error}`);
-          if (error instanceof HttpException) throw error;
-          throw new ServiceUnavailableException(
-            'Failed to fetch Libre data.',
-            error,
-          );
-        } finally {
-          this.inFlight[
-            GLUCOSE_CONSTANTS.LIBRE.CACHE_KEYS.RATELIMIT_FETCH_GLUCOSE
-          ] = null;
         }
-      })();
+        const { token, patientId } = await this.authService.getToken();
+        const response: AxiosResponse<LibreApiResponse> = await lastValueFrom(
+          this.httpService.get(
+            `${this.config.apiUrl}/connections/${patientId}/graph`,
+            {
+              headers: {
+                Authorization: token,
+                product: this.config.product,
+                version: this.config.version,
+                'account-id': this.config.accountId,
+              },
+              validateStatus: () => true,
+            },
+          ),
+        );
 
-    return this.inFlight[
-      GLUCOSE_CONSTANTS.LIBRE.CACHE_KEYS.RATELIMIT_FETCH_GLUCOSE
-    ];
+        const data = await this.handleResponse(response);
+        this.glucoseData = this.transformer.transform(data);
+
+        if (this.glucoseData?.currentGlucose) {
+          await this.repository.saveGlucoseMeasurement({
+            provider: GlucoseProviders.LIBRE,
+            unit: this.glucoseData?.unit,
+            value: this.glucoseData?.currentGlucose.value,
+            timestamp: new Date(this.glucoseData?.currentGlucose.timestamp),
+          });
+        }
+      } catch (error) {
+        this.logger.error(`Libre error: ${error?.message ?? error}`);
+        if (error instanceof HttpException) throw error;
+        throw new ServiceUnavailableException(
+          'Failed to fetch Libre data.',
+          error,
+        );
+      } finally {
+        this.inFlight = null;
+      }
+    })();
+
+    return this.inFlight;
   }
 
   async getUnit(): Promise<string> {
@@ -259,12 +228,21 @@ export class GlucoseLibreService implements IGlucoseService {
     await this.ensureFetched();
 
     if (!this.glucoseData?.unit) {
-      throw new ServiceUnavailableException(
-        'Glucose unit data is not available.',
-      );
+      throw new ServiceUnavailableException('Glucose unit is not available.');
     }
 
     return this.glucoseData.unit;
+  }
+
+  async isSensorActive(): Promise<boolean> {
+    this.ensureAvailable();
+    await this.ensureFetched();
+
+    if (!this.glucoseData?.sensorData) {
+      throw new ServiceUnavailableException('Sensor data is not available.');
+    }
+
+    return this.glucoseData.sensorData.isActive;
   }
 
   async getCurrentGlucose(): Promise<GetCurrentGlucoseResponse> {
@@ -288,9 +266,7 @@ export class GlucoseLibreService implements IGlucoseService {
     await this.ensureFetched();
 
     if (!this.glucoseData?.graphData) {
-      throw new ServiceUnavailableException(
-        'Graph glucose data is not available.',
-      );
+      throw new ServiceUnavailableException('Graph data is not available.');
     }
 
     const response = this.glucoseData.graphData;
@@ -304,9 +280,7 @@ export class GlucoseLibreService implements IGlucoseService {
     await this.ensureFetched();
 
     if (!this.glucoseData?.sensorData) {
-      throw new ServiceUnavailableException(
-        'Sensor glucose data is not available.',
-      );
+      throw new ServiceUnavailableException('Sensor data is not available.');
     }
 
     return this.glucoseData.sensorData;
