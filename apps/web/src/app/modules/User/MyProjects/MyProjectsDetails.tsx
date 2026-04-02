@@ -1,10 +1,12 @@
 import { Link, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
-  ArrowBigLeftDashIcon,
-  Link2Icon,
-  Link2OffIcon,
-  Unlink2Icon,
+  ArrowLeft,
+  ExternalLink,
+  Lock,
+  Users,
+  Calendar,
+  LinkIcon,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { NotFoundPage } from "@/app/modules/NotFound/NotFound.page.tsx";
@@ -23,113 +25,219 @@ export function MyProjectsDetailsPage() {
     return <NotFoundPage message={t("user.myProjectsPage.projectNotFound")} />;
   }
 
-  const statusElements = {
-    completed: "bg-green-bg border-green-border text-green-text",
-    inProgress: "bg-yellow-bg border-yellow-border text-yellow-text",
-    planned: "bg-blue-bg border-blue-border text-blue-text",
+  const statusStyles = {
+    completed:
+      "bg-green-500/10 border-green-500/30 text-green-600 dark:text-green-400",
+    inProgress:
+      "bg-orange-500/10 border-orange-500/30 text-orange-600 dark:text-orange-400",
+    planned:
+      "bg-blue-500/10 border-blue-500/30 text-blue-600 dark:text-blue-400",
   };
+
   return (
-    <div className="flex flex-col gap-2.5 justify-start items-center p-3 bg-card border-2 border-border rounded-xl">
-      <div className="flex flex-wrap md:flex-nowrap gap-3">
-        <div className="flex w-full md:max-w-1/3 flex-col gap-3">
-          <img
-            src={project.image}
-            className="w-full max-h-64 object-cover rounded-md aspect-square"
-            alt={project.title}
-          />
-          <div className="flex flex-wrap max-sm:flex-col gap-2">
-            <motion.button
-              className="flex-1"
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              <Link
-                to="/projects"
-                className="flex flex-1 justify-center items-center gap-2 px-3 py-1.5 rounded-md bg-accent text-center text-accent-foreground text-wrap sm:text-nowrap font-medium hover:bg-accent/25 border-2 border-border hover:border-ring transition-[background-color, border-color] duration-250"
-              >
-                <ArrowBigLeftDashIcon className="size-5" />
-                {t("user.myProjectsPage.returnToProjects")}
-              </Link>
-            </motion.button>
-            {project.sourceCodeOpen ? (
-              project.sourceCodeUrl ? (
-                <motion.button
-                  className="flex-1"
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                >
-                  <Link
-                    to={project.sourceCodeUrl}
-                    className="flex justify-center items-center gap-2 px-3 py-1.5 rounded-md bg-accent text-center text-accent-foreground text-wrap sm:text-nowrap font-medium hover:bg-accent/25 border-2 border-border hover:border-ring transition-[background-color, border-color] duration-250"
-                    target="_blank"
-                  >
-                    <Link2Icon className="size-5" />
-                    {t("user.myProjectsPage.sourceCodeAvailable")}
-                  </Link>
-                </motion.button>
-              ) : (
-                <span className="flex justify-center items-center gap-2 w-full px-3 py-1.5 rounded-md bg-gray-bg border-2 border-gray-border text-gray-text">
-                  <Unlink2Icon className="size-5" />
-                  {t("user.myProjectsPage.sourceCodeNotAvailable")}
-                </span>
-              )
-            ) : (
-              <span className="flex justify-center items-center gap-2 w-full px-3 py-1.5 rounded-md bg-gray-bg border-2 border-gray-border text-gray-text">
-                <Link2OffIcon className="size-5" />
-                {t("user.myProjectsPage.sourceCodeClosed")}
-              </span>
-            )}
-          </div>
-          <div className="w-full border border-border rounded-full" />
-          <div className="flex flex-wrap justify-start items-start gap-2">
-            <span
-              className={`px-2 py-1 rounded-xl text-sm font-medium border ${statusElements[project.status]}`}
-            >
-              {t(`user.myProjectsPage.status.${project.status}`)}
-            </span>
-            {project.startDate && (
-              <span className="bg-accent text-accent-foreground px-2 py-1 rounded-xl text-sm font-medium border border-ring">
-                {`${t("user.myProjectsPage.started")} ${project.startDate}`}
-              </span>
-            )}
-            {project.completeDate && (
-              <span className="bg-accent text-accent-foreground px-2 py-1 rounded-xl text-sm font-medium border border-ring">
-                {`${t("user.myProjectsPage.completed")} ${project.completeDate}`}
-              </span>
-            )}
-          </div>
-          {project.developers && project.developers.length > 0 && (
-            <>
-              <div className="w-full border border-border rounded-full" />
-              <div className="flex flex-wrap justify-start items-start gap-2">
-                {project.developers.map((dev) => (
-                  <span
-                    key={dev.name}
-                    className="bg-accent text-accent-foreground px-2 py-1 rounded-xl text-sm font-medium border border-ring"
-                  >
-                    {dev.name} - {dev.role}
-                  </span>
-                ))}
+    <div className="w-full max-w-6xl mx-auto px-4 py-6">
+      <div className="space-y-6">
+        {/* Back Button */}
+        <motion.div
+          initial={{ opacity: 0, x: -10 }}
+          animate={{ opacity: 1, x: 0 }}
+        >
+          <Link
+            to="/projects"
+            className="inline-flex items-center gap-2 px-4 py-2 text-muted-foreground hover:text-primary hover:bg-muted rounded-lg transition-colors"
+          >
+            <ArrowLeft size={18} />
+            <span>{t("user.myProjectsPage.returnToProjects")}</span>
+          </Link>
+        </motion.div>
+
+        {/* Main Content */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Left: Image and Metadata */}
+          <motion.div
+            className="lg:col-span-1"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+          >
+            <div className="space-y-4 sticky top-6">
+              {/* Project Image */}
+              <div className="relative overflow-hidden rounded-2xl bg-muted border border-border shadow-lg h-64 lg:h-80">
+                <img
+                  src={project.image}
+                  className="w-full h-full object-cover"
+                  alt={project.title}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-card via-transparent to-transparent opacity-60" />
               </div>
-            </>
-          )}
-        </div>
-        <div className="flex flex-col w-full md:max-w-2/3 gap-3">
-          <div className="w-full border border-border rounded-full md:hidden" />
-          {project.tags && (
-            <div className="flex flex-wrap justify-start items-start gap-1.5">
-              {project.tags.map((tag) => (
+
+              {/* Status Badge */}
+              <div className="flex justify-center">
                 <span
-                  key={tag}
-                  className="bg-accent text-accent-foreground px-2 py-1 rounded-xl text-sm font-medium border border-ring"
+                  className={`px-4 py-2 rounded-full text-sm font-semibold border ${statusStyles[project.status]}`}
                 >
-                  {tag}
+                  {t(`user.myProjectsPage.status.${project.status}`)}
                 </span>
-              ))}
+              </div>
+
+              {/* Action Buttons */}
+              <div className="space-y-3">
+                {project.sourceCodeOpen ? (
+                  project.sourceCodeUrl ? (
+                    <motion.a
+                      href={project.sourceCodeUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      className="flex w-full items-center justify-center gap-2 px-4 py-3 bg-accent/20 border border-accent rounded-xl text-accent hover:bg-accent/30 font-medium transition-colors"
+                    >
+                      <LinkIcon size={18} />
+                      {t("user.myProjectsPage.sourceCodeAvailable")}
+                    </motion.a>
+                  ) : (
+                    <div className="flex w-full items-center justify-center gap-2 px-4 py-3 bg-muted border border-border rounded-xl text-muted-foreground font-medium">
+                      <ExternalLink size={18} />
+                      {t("user.myProjectsPage.sourceCodeNotAvailable")}
+                    </div>
+                  )
+                ) : (
+                  <div className="flex w-full items-center justify-center gap-2 px-4 py-3 bg-muted border border-border rounded-xl text-muted-foreground font-medium">
+                    <Lock size={18} />
+                    {t("user.myProjectsPage.sourceCodeClosed")}
+                  </div>
+                )}
+              </div>
+
+              {/* Metadata Cards */}
+              {project.startDate && (
+                <div className="bg-card border border-border rounded-xl p-4 space-y-2">
+                  <div className="flex items-center gap-2 text-muted-foreground text-sm">
+                    <Calendar size={16} />
+                    <span className="font-medium uppercase tracking-wide">
+                      {t("user.myProjectsPage.started")}
+                    </span>
+                  </div>
+                  <p className="text-primary font-semibold">
+                    {project.startDate}
+                  </p>
+                </div>
+              )}
+
+              {project.completeDate && (
+                <div className="bg-card border border-border rounded-xl p-4 space-y-2">
+                  <div className="flex items-center gap-2 text-muted-foreground text-sm">
+                    <Calendar size={16} />
+                    <span className="font-medium uppercase tracking-wide">
+                      {t("user.myProjectsPage.completed")}
+                    </span>
+                  </div>
+                  <p className="text-primary font-semibold">
+                    {project.completeDate}
+                  </p>
+                </div>
+              )}
+
+              {/* Developers */}
+              {project.developers && project.developers.length > 0 && (
+                <div className="bg-card border border-border rounded-xl p-4 space-y-3">
+                  <div className="flex items-center gap-2 text-muted-foreground">
+                    <Users size={16} />
+                    <span className="font-medium uppercase tracking-wide text-sm">
+                      Zespół
+                    </span>
+                  </div>
+                  <div className="space-y-2">
+                    {project.developers.map((dev) => (
+                      <div
+                        key={dev.name}
+                        className="pb-2 last:pb-0 last:border-0 border-b border-border/50"
+                      >
+                        <p className="text-sm font-semibold text-primary">
+                          {dev.name}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          {dev.role}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
-          )}
-          <h1 className="text-3xl/8 font-bold text-primary">{project.title}</h1>
-          <p className="text-foreground">{project.description}</p>
+          </motion.div>
+
+          {/* Right: Description and Tags */}
+          <motion.div
+            className="lg:col-span-2"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+          >
+            <div className="space-y-6">
+              {/* Title */}
+              <div className="space-y-2">
+                <h1 className="text-3xl md:text-4xl font-bold text-primary">
+                  {project.title}
+                </h1>
+              </div>
+
+              {/* Tags */}
+              {project.tags && (
+                <div className="flex flex-wrap gap-2">
+                  {project.tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="inline-flex items-center px-3 py-1.5 rounded-lg text-sm font-medium bg-accent/10 border border-accent/30 text-accent"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              )}
+
+              {/* Description */}
+              <div className="bg-card border border-border rounded-2xl p-6 md:p-8">
+                <div className="prose prose-invert max-w-none dark:prose-invert">
+                  <p className="text-base leading-relaxed text-foreground whitespace-pre-wrap">
+                    {project.description}
+                  </p>
+                </div>
+              </div>
+
+              {/* Quick Stats */}
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                <div className="bg-muted/50 rounded-xl p-4 border border-border/50">
+                  <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-2">
+                    Status
+                  </p>
+                  <p className="text-sm font-semibold text-primary">
+                    {t(`user.myProjectsPage.status.${project.status}`)}
+                  </p>
+                </div>
+                {project.tags && (
+                  <div className="bg-muted/50 rounded-xl p-4 border border-border/50">
+                    <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-2">
+                      Technologie
+                    </p>
+                    <p className="text-sm font-semibold text-primary">
+                      {project.tags.length}
+                    </p>
+                  </div>
+                )}
+                {project.developers && (
+                  <div className="bg-muted/50 rounded-xl p-4 border border-border/50">
+                    <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-2">
+                      Zespół
+                    </p>
+                    <p className="text-sm font-semibold text-primary">
+                      {project.developers.length}
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </motion.div>
         </div>
       </div>
     </div>
