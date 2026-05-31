@@ -71,8 +71,11 @@ export class GlucoseLibreAuthService {
           `Rate limit exceeded, retry after ${retryAfter} seconds.`,
         );
       default:
+        this.logger.error(
+          response?.data?.data || response.statusText || 'Unknown error',
+        );
         throw new ServiceUnavailableException(
-          'Libre token endpoint is unavailable.',
+          `Libre token endpoint is unavailable. ${response.status} ${response.statusText}`,
         );
     }
 
