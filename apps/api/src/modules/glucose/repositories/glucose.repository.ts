@@ -29,9 +29,12 @@ export class GlucoseRepository {
     query.where('glucose.unit = :unit', { unit: data.unit });
 
     if (data.hours) {
-      query.andWhere('HOUR(TIMEDIFF(NOW(), glucose.timestamp)) <= :hours', {
-        hours: data.hours,
-      });
+      query.andWhere(
+        'EXTRACT(EPOCH FROM (NOW() - glucose.timestamp)) / 3600 <= :hours',
+        {
+          hours: data.hours,
+        },
+      );
     }
 
     if (data.provider) {
@@ -43,17 +46,24 @@ export class GlucoseRepository {
     return query;
   }
 
-  async saveGlucoseMeasurement(data: {
+  async addGlucoseReading(data: {
     value: number;
     unit: string;
     provider: string;
     timestamp: Date;
   }): Promise<void> {
     try {
-      const newRecord = this.glucoseRepo.create(data);
-      await this.glucoseRepo.save(newRecord);
+      await this.glucoseRepo.upsert(
+        {
+          value: data.value,
+          unit: data.unit,
+          provider: data.provider,
+          timestamp: data.timestamp,
+        },
+        ['timestamp'],
+      );
     } catch (error) {
-      this.logger.warn(error.message);
+      this.logger.error(`saveGlucoseMeasurement: ${error.message}`);
     }
   }
 
@@ -110,7 +120,7 @@ export class GlucoseRepository {
       };
 
       return {
-        sufficientData: total > 0,
+        isDataSufficient: total > 0,
         percentageLow: toPercentage(parseInt(result.low)),
         percentageBelowRange: toPercentage(parseInt(result.belowRange)),
         percentageInRange: toPercentage(parseInt(result.inRange)),
@@ -137,20 +147,14 @@ export class GlucoseRepository {
           .createQueryBuilder('glucose')
           .select('AVG(glucose.value)', 'avg')
           .addSelect('glucose.unit', 'unit')
-          .where(
-            `glucose.unit = :unit ${data.hours ? 'AND HOUR(TIMEDIFF(NOW(), glucose.timestamp)) <= :hours' : ''} ${data.provider ? 'AND glucose.provider = :provider' : ''}`,
-            {
-              unit: data.unit,
-              provider: data.provider,
-              hours: data.hours,
-            },
-          ),
+          .groupBy('glucose.unit'),
         data,
       ).getRawOne();
-      const value = parseFloat(result.avg) || 0;
+
+      const value = result?.avg ? parseInt(result.avg) : 0;
 
       return {
-        sufficientData: value > 0,
+        isDataSufficient: !!result && value > 0,
         value: value,
         unit: data.unit,
         hours: data.hours || undefined,
@@ -172,21 +176,14 @@ export class GlucoseRepository {
       const result = await this.applyFilters(
         this.glucoseRepo
           .createQueryBuilder('glucose')
-          .select('MAX(glucose.value)', 'max')
-          .where(
-            `glucose.unit = :unit ${data.hours ? 'AND HOUR(TIMEDIFF(NOW(), glucose.timestamp)) <= :hours' : ''} ${data.provider ? 'AND glucose.provider = :provider' : ''}`,
-            {
-              unit: data.unit,
-              hours: data.hours,
-              provider: data.provider,
-            },
-          ),
+          .select('MAX(glucose.value)', 'max'),
         data,
       ).getRawOne();
-      const value = parseFloat(result.max) || 0;
+
+      const value = result?.max ? parseFloat(result.max) : 0;
 
       return {
-        sufficientData: value > 0,
+        isDataSufficient: !!result && value > 0,
         value: value,
         unit: data.unit,
         hours: data.hours || undefined,
@@ -208,21 +205,14 @@ export class GlucoseRepository {
       const result = await this.applyFilters(
         this.glucoseRepo
           .createQueryBuilder('glucose')
-          .select('MIN(glucose.value)', 'min')
-          .where(
-            `glucose.unit = :unit ${data.hours ? 'AND HOUR(TIMEDIFF(NOW(), glucose.timestamp)) <= :hours' : ''} ${data.provider ? 'AND glucose.provider = :provider' : ''}`,
-            {
-              unit: data.unit,
-              hours: data.hours,
-              provider: data.provider,
-            },
-          ),
+          .select('MIN(glucose.value)', 'min'),
         data,
       ).getRawOne();
-      const value = parseFloat(result.min) || 0;
+
+      const value = result?.min ? parseFloat(result.min) : 0;
 
       return {
-        sufficientData: value > 0,
+        isDataSufficient: !!result && value > 0,
         value: value,
         unit: data.unit,
         hours: data.hours || undefined,
@@ -235,29 +225,24 @@ export class GlucoseRepository {
     }
   }
 
-  async saveSensorProvider(provider: string): Promise<void> {
-    const value = JSON.stringify({ provider: provider });
-    const existing = await this.settingsRepo.findOne({
-      where: { code: 'GLUCOSE_PROVIDER' },
-    });
-    if (existing) {
-      existing.value = value;
-      await this.settingsRepo.save(existing);
-    } else {
-      const setting = this.settingsRepo.create({
+  async setSensorProvider(provider: string): Promise<void> {
+    const value: Record<string, any> = { provider: provider };
+
+    await this.settingsRepo.upsert(
+      {
         code: 'GLUCOSE_PROVIDER',
         label: 'status.glucoseProvider',
         value,
-      });
-      await this.settingsRepo.save(setting);
-    }
+      },
+      ['code'],
+    );
   }
 
   async getSensorProvider(): Promise<{ provider: string }> {
     const result = await this.settingsRepo.findOne({
       where: { code: 'GLUCOSE_PROVIDER' },
     });
-    const provider = result?.value ? JSON.parse(result.value).provider : 'none';
+    const provider: string = result?.value?.provider || 'none';
     return { provider };
   }
 }

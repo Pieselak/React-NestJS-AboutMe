@@ -13,5 +13,5 @@ export class SettingsEntity {
   label?: string;
 
   @Column({ type: 'jsonb' })
-  value: string;
+  value: Record<string, any>;
 }

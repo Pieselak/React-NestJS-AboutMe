@@ -302,7 +302,7 @@ export interface GetTimeInRangeResponse {
    * Indicates whether sufficient data is available for calculation
    * @example true
    */
-  sufficientData: boolean;
+  isDataSufficient: boolean;
   /**
    * Percentage of time with critically high glucose levels
    * @example 5
@@ -340,7 +340,7 @@ export interface GetAverageGlucoseResponse {
    * Indicates if there is sufficient data to calculate
    * @example true
    */
-  sufficientData: boolean;
+  isDataSufficient: boolean;
   /**
    * Average glucose value
    * @example 118
@@ -363,7 +363,7 @@ export interface GetHighestGlucoseResponse {
    * Indicates whether sufficient data is available for calculation
    * @example true
    */
-  sufficientData: boolean;
+  isDataSufficient: boolean;
   /**
    * Highest glucose measurement value recorded in the specified period
    * @example 320
@@ -386,7 +386,7 @@ export interface GetLowestGlucoseResponse {
    * Indicates whether sufficient data is available for calculation
    * @example true
    */
-  sufficientData: boolean;
+  isDataSufficient: boolean;
   /**
    * Lowest glucose measurement value recorded in the specified period
    * @example 55
@@ -415,10 +415,8 @@ import axios from "axios";
 
 export type QueryParamsType = Record<string | number, any>;
 
-export interface FullRequestParams extends Omit<
-  AxiosRequestConfig,
-  "data" | "params" | "url" | "responseType"
-> {
+export interface FullRequestParams
+  extends Omit<AxiosRequestConfig, "data" | "params" | "url" | "responseType"> {
   /** set parameter to `true` for call `securityWorker` for this request */
   secure?: boolean;
   /** request path */
@@ -438,10 +436,8 @@ export type RequestParams = Omit<
   "body" | "method" | "query" | "path"
 >;
 
-export interface ApiConfig<SecurityDataType = unknown> extends Omit<
-  AxiosRequestConfig,
-  "data" | "cancelToken"
-> {
+export interface ApiConfig<SecurityDataType = unknown>
+  extends Omit<AxiosRequestConfig, "data" | "cancelToken"> {
   securityWorker?: (
     securityData: SecurityDataType | null,
   ) => Promise<AxiosRequestConfig | void> | AxiosRequestConfig | void;

@@ -86,6 +86,7 @@ const en = {
           title: "My Blood Glucose",
           subtitle:
             "Browse blood glucose data from my CGM (continuous glucose monitor) in real-time. View current readings, analyze trends, and monitor time spent in target glucose range. Everything in one place, available for anyone interested.",
+          loading: "Loading glucose data...",
           subpages: {
             summary: {
               navigation: "Summary",
@@ -100,10 +101,61 @@ const en = {
               title: "Visualization of glucose readings",
             },
           },
-          current: {},
-          summary: {},
-          timeInRange: {},
-          graph: {},
+          current: {
+            title: "Current reading",
+            sensor: "Sensor",
+            noSensor: "No sensor data",
+            active: "Active",
+            inactive: "Inactive",
+            status: "Reading status",
+            current: "Current",
+            stale: "Stale",
+            readAt: "Read at",
+            lastUpload: "Last upload",
+            expiresIn: "Expires in",
+            refresh: "Next refresh",
+            trends: {
+              none: "No trend available",
+              risingFast: "Rising fast",
+              rising: "Rising",
+              risingSlow: "Rising slowly",
+              stable: "Stable",
+              fallingSlow: "Falling slowly",
+              falling: "Falling",
+              fallingFast: "Falling fast",
+            },
+          },
+          summary: {
+            period: "Statistics from the last {{hours}} hours.",
+            average: "Average",
+            highest: "Highest",
+            lowest: "Lowest",
+            timeInRange: "Time in range",
+          },
+          timeInRange: {
+            period: "Distribution from the last {{hours}} hours.",
+          },
+          graph: {
+            empty: "No glucose readings available for the graph.",
+            range: "Target range: {{low}}-{{high}} {{unit}}",
+            value: "Glucose",
+          },
+          ranges: {
+            high: "Critically high",
+            aboveRange: "Above range",
+            inRange: "In range",
+            belowRange: "Below range",
+            low: "Critically low",
+            critical: "Critical threshold",
+          },
+          errors: {
+            current: "Current glucose data could not be loaded.",
+            graph: "Graph data could not be loaded.",
+            timeInRange: "Time in range data could not be loaded.",
+            summary: "Glucose summary could not be loaded.",
+            insufficientData:
+              "There is not enough data to calculate a reliable result yet.",
+          },
         },
       },
 

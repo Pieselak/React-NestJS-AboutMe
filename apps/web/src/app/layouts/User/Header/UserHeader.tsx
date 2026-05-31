@@ -47,7 +47,7 @@ export function UserHeader({ navigationItems }: userHeaderProps) {
             className={`flex gap-1 items-center border px-2 py-1 rounded-md hover:border-ring cursor-pointer transition-[border-color, background-color] duration-250 ${
               pathname.split("/")[1] === navigationItem.url.substring(1)
                 ? "bg-muted border-ring text-accent-foreground"
-                : "border-transparent"
+                : "border-transparent text-muted-foreground"
             }`}
           >
             {navigationItem.icon && (

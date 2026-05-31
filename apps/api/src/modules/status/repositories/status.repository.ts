@@ -10,29 +10,24 @@ export class StatusRepository {
     private readonly settingsRepo: Repository<SettingsEntity>,
   ) {}
 
-  async saveMaintenanceStatus(enable: boolean): Promise<void> {
-    const value = JSON.stringify({ enabled: enable });
-    const existing = await this.settingsRepo.findOne({
-      where: { code: 'MAINTENANCE' },
-    });
-    if (existing) {
-      existing.value = value;
-      await this.settingsRepo.save(existing);
-    } else {
-      const setting = this.settingsRepo.create({
+  async setMaintenanceMode(enable: boolean): Promise<void> {
+    const value: Record<string, any> = { enabled: enable };
+
+    await this.settingsRepo.upsert(
+      {
         code: 'MAINTENANCE',
         label: 'status.maintenance',
         value,
-      });
-      await this.settingsRepo.save(setting);
-    }
+      },
+      ['code'],
+    );
   }
 
-  async getMaintenanceStatus(): Promise<{ enabled: boolean }> {
+  async getMaintenanceMode(): Promise<{ enabled: boolean }> {
     const result = await this.settingsRepo.findOne({
       where: { code: 'MAINTENANCE' },
     });
-    const enabled = result?.value ? JSON.parse(result.value).enabled : false;
+    const enabled: boolean = result?.value?.enabled;
     return { enabled };
   }
 }

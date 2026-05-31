@@ -7,7 +7,7 @@ export class GetTimeInRangeResponse {
       'Indicates whether sufficient data is available for calculation',
     example: true,
   })
-  sufficientData: boolean;
+  isDataSufficient: boolean;
 
   @ApiProperty({
     type: Number,

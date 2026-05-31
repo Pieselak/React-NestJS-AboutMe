@@ -1,9 +1,8 @@
 import { useTranslation } from "react-i18next";
+import { motion } from "framer-motion";
 import { GlucoseCurrent } from "@/app/modules/User/Glucose/GlucoseCurrent.tsx";
-import {
-  GlucoseNavigation,
-  navigationItems,
-} from "@/app/modules/User/Glucose/GlucoseNavigation.tsx";
+import { GlucoseNavigation } from "@/app/modules/User/Glucose/GlucoseNavigation.tsx";
+import { navigationItems } from "@/app/modules/User/Glucose/GlucoseNavigation.items.tsx";
 import { type ReactElement, useEffect } from "react";
 import { useSearchParams } from "react-router";
 
@@ -20,35 +19,60 @@ export function GlucosePage() {
     }
   }, [searchParams, sections, setSearchParams]);
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.1,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.4 },
+    },
+  };
+
   const renderSection = (): ReactElement | null => {
     if (!navigationItems || navigationItems.length === 0) return null;
     const section = searchParams.get("section");
     const selected = sections.find((s) => s.param === section);
-    return selected ? (
-      <div className="bg-card border border-border rounded-2xl p-6 md:p-8">
-        {selected.element}
-      </div>
-    ) : null;
+    return selected ? selected.element : null;
   };
 
   return (
     <div className="flex flex-col justify-start items-center">
-      <div className="space-y-6">
-        <div className="flex flex-col gap-1">
+      <motion.div
+        className="space-y-6 w-full"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+      >
+        <motion.div className="flex flex-col gap-1" variants={itemVariants}>
           <h1 className="text-3xl md:text-4xl font-bold text-primary">
             {t("pages.user.glucose.title")}
           </h1>
           <p className="text-muted-foreground">
             {t("pages.user.glucose.subtitle")}
           </p>
-        </div>
+        </motion.div>
 
-        <GlucoseCurrent />
+        <motion.div variants={itemVariants}>
+          <GlucoseCurrent />
+        </motion.div>
 
-        <GlucoseNavigation />
+        <motion.div variants={itemVariants}>
+          <GlucoseNavigation />
+        </motion.div>
 
         {renderSection()}
-      </div>
+      </motion.div>
     </div>
   );
 }

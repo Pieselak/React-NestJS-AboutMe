@@ -17,7 +17,6 @@ import { Cache, CACHE_MANAGER } from '@nestjs/cache-manager';
 import { clearTimeout } from 'node:timers';
 import { GLUCOSE_CONSTANTS } from '../../../../constants/glucose.constants';
 import { AxiosResponse } from 'axios';
-import { ThrottlerException } from '@nestjs/throttler';
 import { lastValueFrom } from 'rxjs';
 import {
   DexcomApiDataRangeResponse,
@@ -223,7 +222,7 @@ export class GlucoseDexcomService extends BaseGlucoseService {
         this.glucoseData = this.transformer.transform(egvsData, devicesData);
 
         if (this.glucoseData?.currentGlucose) {
-          await this.repository.saveGlucoseMeasurement({
+          await this.repository.addGlucoseReading({
             provider: GlucoseProviders.DEXCOM,
             unit: this.glucoseData?.unit,
             value: this.glucoseData?.currentGlucose.value,

@@ -1,120 +1,147 @@
-import { Calendar, Download, ZoomIn } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import {
+  Area,
+  AreaChart,
+  CartesianGrid,
+  ReferenceArea,
+  ReferenceLine,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
+import { useGlucoseGraph } from "@/app/api/queries/useGlucose.ts";
+import { GlucoseStatus } from "@/app/api/generated-api.ts";
+import {
+  formatGlucoseDate,
+  getGlucoseColorClasses,
+} from "@/app/modules/User/Glucose/Glucose.utils.ts";
+import {
+  GlucoseErrorState,
+  GlucoseLoadingState,
+  GlucoseMessageState,
+} from "@/app/modules/User/Glucose/GlucoseStates.tsx";
+import { motion } from "framer-motion";
 
 export function GlucoseGraph() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const graphQuery = useGlucoseGraph();
 
-  const timeRanges = ["24h", "7d", "30d", "90d"];
+  if (graphQuery.isLoading) return <GlucoseLoadingState />;
+
+  if (graphQuery.isError || !graphQuery.data) {
+    return <GlucoseErrorState message={t("pages.user.glucose.errors.graph")} />;
+  }
+
+  const graph = graphQuery.data;
+  const points = graph.data
+    .filter((point) => point.status === GlucoseStatus.Computable)
+    .map((point) => ({
+      ...point,
+      timestampLabel: formatGlucoseDate(point.timestamp, i18n.language),
+    }));
+
+  if (points.length === 0) {
+    return (
+      <GlucoseMessageState message={t("pages.user.glucose.graph.empty")} />
+    );
+  }
+
+  const unit = points[0].unit;
+  const values = points.map((point) => point.value);
+  const yMin = Math.max(0, Math.min(graph.levelLow, ...values) - 20);
+  const yMax = Math.max(graph.levelHigh, ...values) + 20;
+  const lineColor = getGlucoseColorClasses(points.at(-1)?.color).stroke;
 
   return (
-    <div className="w-full space-y-6">
-      <div className="flex flex-col gap-2">
-        <h2 className="text-2xl font-bold text-primary">
+    <motion.section
+      className="bg-card border border-border rounded-2xl p-6 md:p-8 space-y-5"
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+    >
+      <div className="flex flex-col gap-1">
+        <h2 className="text-xl font-bold text-primary">
           {t("pages.user.glucose.subpages.graph.title")}
         </h2>
-      </div>
-
-      {/* Controls */}
-      <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between bg-muted/50 p-4 rounded-xl border border-border/50">
-        <div className="flex gap-2 flex-wrap">
-          {timeRanges.map((range) => (
-            <button
-              key={range}
-              className={`px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200 ${
-                range === "24h"
-                  ? "bg-accent/20 border border-accent text-accent"
-                  : "bg-muted border border-border/50 text-muted-foreground hover:bg-border hover:border-border"
-              }`}
-            >
-              {range}
-            </button>
-          ))}
-        </div>
-
-        <div className="flex gap-2">
-          <button className="flex items-center gap-2 px-3 py-2 rounded-lg bg-muted border border-border/50 text-muted-foreground hover:bg-border transition-colors text-sm font-medium">
-            <Calendar size={16} />
-            <span className="hidden sm:inline">Zakres</span>
-          </button>
-          <button className="flex items-center gap-2 px-3 py-2 rounded-lg bg-muted border border-border/50 text-muted-foreground hover:bg-border transition-colors text-sm font-medium">
-            <Download size={16} />
-            <span className="hidden sm:inline">Pobierz</span>
-          </button>
-        </div>
-      </div>
-
-      {/* Chart Placeholder */}
-      <div className="bg-muted/50 rounded-xl p-8 border border-border/50 h-96 flex flex-col items-center justify-center">
-        <ZoomIn size={48} className="text-muted-foreground/50 mb-4" />
-        <p className="text-muted-foreground text-center">
-          Czekam na dane z urządzenia
-        </p>
-        <p className="text-sm text-muted-foreground/70 mt-2">
-          Wykres zostanie wyświetlony po synchronizacji
+        <p className="text-sm text-muted-foreground">
+          {t("pages.user.glucose.graph.range", {
+            low: graph.targetLow,
+            high: graph.targetHigh,
+            unit,
+          })}
         </p>
       </div>
 
-      {/* Legend */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="bg-muted/50 rounded-xl p-4 border border-border/50">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="w-3 h-3 rounded-full bg-green-500" />
-            <span className="text-sm font-medium text-muted-foreground">
-              Norma
-            </span>
-          </div>
-          <p className="text-xs text-muted-foreground">70-180 mg/dL</p>
-        </div>
-        <div className="bg-muted/50 rounded-xl p-4 border border-border/50">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="w-3 h-3 rounded-full bg-orange-500" />
-            <span className="text-sm font-medium text-muted-foreground">
-              Wysoko
-            </span>
-          </div>
-          <p className="text-xs text-muted-foreground">&gt; 180 mg/dL</p>
-        </div>
-        <div className="bg-muted/50 rounded-xl p-4 border border-border/50">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="w-3 h-3 rounded-full bg-red-500" />
-            <span className="text-sm font-medium text-muted-foreground">
-              Nisko
-            </span>
-          </div>
-          <p className="text-xs text-muted-foreground">&lt; 70 mg/dL</p>
-        </div>
-        <div className="bg-muted/50 rounded-xl p-4 border border-border/50">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="w-3 h-3 rounded-full bg-destructive" />
-            <span className="text-sm font-medium text-muted-foreground">
-              Bardzo nisko
-            </span>
-          </div>
-          <p className="text-xs text-muted-foreground">&lt; 54 mg/dL</p>
-        </div>
+      <div className="h-80 w-full rounded-xl border border-border bg-muted/30 p-3">
+        <ResponsiveContainer width="100%" height="100%">
+          <AreaChart
+            data={points}
+            margin={{ top: 16, right: 12, left: -8, bottom: 8 }}
+          >
+            <defs>
+              <linearGradient id="glucoseGraphFill" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor={lineColor} stopOpacity={0.32} />
+                <stop offset="95%" stopColor={lineColor} stopOpacity={0.02} />
+              </linearGradient>
+            </defs>
+            <CartesianGrid stroke="var(--border)" strokeDasharray="4 4" />
+            <ReferenceArea
+              y1={graph.targetLow}
+              y2={graph.targetHigh}
+              fill="var(--green-bg)"
+              fillOpacity={0.55}
+            />
+            <ReferenceLine
+              y={graph.levelLow}
+              stroke="var(--red-glucose)"
+              strokeDasharray="5 5"
+            />
+            <ReferenceLine
+              y={graph.levelHigh}
+              stroke="var(--red-glucose)"
+              strokeDasharray="5 5"
+            />
+            <XAxis
+              dataKey="timestampLabel"
+              minTickGap={32}
+              tick={{ fill: "var(--muted-foreground)", fontSize: 12 }}
+              tickLine={false}
+              axisLine={{ stroke: "var(--border)" }}
+            />
+            <YAxis
+              domain={[yMin, yMax]}
+              tick={{ fill: "var(--muted-foreground)", fontSize: 12 }}
+              tickLine={false}
+              axisLine={{ stroke: "var(--border)" }}
+              width={44}
+            />
+            <Tooltip
+              cursor={{ stroke: "var(--ring)", strokeDasharray: "4 4" }}
+              contentStyle={{
+                background: "var(--card)",
+                border: "1px solid var(--border)",
+                borderRadius: 12,
+                color: "var(--foreground)",
+              }}
+              formatter={(value) => [
+                `${value} ${unit}`,
+                t("pages.user.glucose.graph.value"),
+              ]}
+              labelStyle={{ color: "var(--muted-foreground)" }}
+            />
+            <Area
+              type="monotone"
+              dataKey="value"
+              stroke={lineColor}
+              strokeWidth={3}
+              fill="url(#glucoseGraphFill)"
+              dot={false}
+              activeDot={{ r: 5, strokeWidth: 0, fill: lineColor }}
+            />
+          </AreaChart>
+        </ResponsiveContainer>
       </div>
-
-      {/* Statistics */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 border-t border-border">
-        <div className="bg-muted/50 rounded-xl p-5 border border-border/50">
-          <p className="text-sm font-medium text-muted-foreground mb-2 uppercase tracking-wide">
-            Średnia
-          </p>
-          <p className="text-2xl font-bold text-primary">-- mg/dL</p>
-        </div>
-        <div className="bg-muted/50 rounded-xl p-5 border border-border/50">
-          <p className="text-sm font-medium text-muted-foreground mb-2 uppercase tracking-wide">
-            Min
-          </p>
-          <p className="text-2xl font-bold text-primary">-- mg/dL</p>
-        </div>
-        <div className="bg-muted/50 rounded-xl p-5 border border-border/50">
-          <p className="text-sm font-medium text-muted-foreground mb-2 uppercase tracking-wide">
-            Max
-          </p>
-          <p className="text-2xl font-bold text-primary">-- mg/dL</p>
-        </div>
-      </div>
-    </div>
+    </motion.section>
   );
 }

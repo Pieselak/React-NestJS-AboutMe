@@ -86,6 +86,7 @@ const pl = {
           title: "Moja glukoza we krwi",
           subtitle:
             "Przeglądaj dane dotyczące glukozy we krwi z mojego CGM (sensora glukozy we krwi) w czasie rzeczywistym. Przeglądaj aktualne odczyty, analizuj trendy i monitoruj czas spędzony w docelowym zakresie glukozy we krwi. Wszystko to w jednym miejscu, dostępne dla każdego zainteresowanego.",
+          loading: "Wczytywanie danych glukozy...",
           subpages: {
             summary: {
               navigation: "Podsumowanie",
@@ -100,10 +101,61 @@ const pl = {
               title: "Wizualizacja danych z odczytów",
             },
           },
-          current: {},
-          summary: {},
-          timeInRange: {},
-          graph: {},
+          current: {
+            title: "Aktualny odczyt",
+            sensor: "Sensor",
+            noSensor: "Brak danych sensora",
+            active: "Aktywny",
+            inactive: "Nieaktywny",
+            status: "Status odczytu",
+            current: "Aktualny",
+            stale: "Nieaktualny",
+            readAt: "Odczytano",
+            lastUpload: "Ostatni upload",
+            expiresIn: "Wygasa za",
+            refresh: "Następne odświeżenie",
+            trends: {
+              none: "Brak informacji o trendzie",
+              risingFast: "Szybko rośnie",
+              rising: "Rośnie",
+              risingSlow: "Powoli rośnie",
+              stable: "Stabilnie",
+              fallingSlow: "Powoli spada",
+              falling: "Spada",
+              fallingFast: "Szybko spada",
+            },
+          },
+          summary: {
+            period: "Statystyki z ostatnich {{hours}} godzin.",
+            average: "Średnia",
+            highest: "Najwyższa",
+            lowest: "Najniższa",
+            timeInRange: "Czas w zakresie",
+          },
+          timeInRange: {
+            period: "Rozkład z ostatnich {{hours}} godzin.",
+          },
+          graph: {
+            empty: "Brak odczytów glukozy do wyświetlenia na wykresie.",
+            range: "Zakres docelowy: {{low}}-{{high}} {{unit}}",
+            value: "Glukoza",
+          },
+          ranges: {
+            high: "Krytycznie wysoko",
+            aboveRange: "Powyżej zakresu",
+            inRange: "W zakresie",
+            belowRange: "Poniżej zakresu",
+            low: "Krytycznie nisko",
+            critical: "Próg krytyczny",
+          },
+          errors: {
+            current: "Nie udało się wczytać aktualnych danych glukozy.",
+            graph: "Nie udało się wczytać danych wykresu.",
+            timeInRange: "Nie udało się wczytać czasu w zakresie.",
+            summary: "Nie udało się wczytać podsumowania glukozy.",
+            insufficientData:
+              "Nie ma jeszcze wystarczającej ilości danych do wiarygodnego obliczenia.",
+          },
         },
       },
 

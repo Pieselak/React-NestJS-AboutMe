@@ -259,7 +259,7 @@ export class GlucoseService implements OnModuleInit, OnModuleDestroy {
     }
 
     try {
-      await this.repository.saveSensorProvider(body.provider);
+      await this.repository.setSensorProvider(body.provider);
       return {
         provider: body.provider,
         message: `Provider mode has been set to ${body.provider}.`,

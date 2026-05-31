@@ -86,6 +86,7 @@ const de = {
           title: "Mein Blutzucker",
           subtitle:
             "Durchsuchen Sie Blutzuckerdaten von meinem CGM (kontinuierliches Glukosemessgerät) in Echtzeit. Sehen Sie aktuelle Messwerte, analysieren Sie Trends und überwachen Sie die im Zielbereich verbrachte Zeit. Alles an einem Ort, verfügbar für jeden Interessierten.",
+          loading: "Glukosedaten werden geladen...",
           subpages: {
             summary: {
               navigation: "Zusammenfassung",
@@ -100,10 +101,61 @@ const de = {
               title: "Visualisierung der Blutzuckermesswerte",
             },
           },
-          current: {},
-          summary: {},
-          timeInRange: {},
-          graph: {},
+          current: {
+            title: "Aktueller Wert",
+            sensor: "Sensor",
+            noSensor: "Keine Sensordaten",
+            active: "Aktiv",
+            inactive: "Inaktiv",
+            status: "Messstatus",
+            current: "Aktuell",
+            stale: "Veraltet",
+            readAt: "Gemessen um",
+            lastUpload: "Letzter Upload",
+            expiresIn: "Läuft ab in",
+            refresh: "Nächste Aktualisierung",
+            trends: {
+              none: "Kein Trend verfügbar",
+              risingFast: "Steigt schnell",
+              rising: "Steigt",
+              risingSlow: "Steigt langsam",
+              stable: "Stabil",
+              fallingSlow: "Fällt langsam",
+              falling: "Fällt",
+              fallingFast: "Fällt schnell",
+            },
+          },
+          summary: {
+            period: "Statistiken der letzten {{hours}} Stunden.",
+            average: "Durchschnitt",
+            highest: "Höchster Wert",
+            lowest: "Niedrigster Wert",
+            timeInRange: "Zeit im Bereich",
+          },
+          timeInRange: {
+            period: "Verteilung der letzten {{hours}} Stunden.",
+          },
+          graph: {
+            empty: "Keine Glukosewerte für das Diagramm verfügbar.",
+            range: "Zielbereich: {{low}}-{{high}} {{unit}}",
+            value: "Glukose",
+          },
+          ranges: {
+            high: "Kritisch hoch",
+            aboveRange: "Über Bereich",
+            inRange: "Im Bereich",
+            belowRange: "Unter Bereich",
+            low: "Kritisch niedrig",
+            critical: "Kritischer Grenzwert",
+          },
+          errors: {
+            current: "Aktuelle Glukosedaten konnten nicht geladen werden.",
+            graph: "Diagrammdaten konnten nicht geladen werden.",
+            timeInRange: "Zeit-im-Bereich-Daten konnten nicht geladen werden.",
+            summary: "Glukosezusammenfassung konnte nicht geladen werden.",
+            insufficientData:
+              "Es gibt noch nicht genug Daten für eine zuverlässige Berechnung.",
+          },
         },
       },
 

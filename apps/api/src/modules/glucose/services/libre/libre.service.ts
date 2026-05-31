@@ -169,7 +169,7 @@ export class GlucoseLibreService extends BaseGlucoseService {
         this.glucoseData = this.transformer.transform(data);
 
         if (this.glucoseData?.currentGlucose) {
-          await this.repository.saveGlucoseMeasurement({
+          await this.repository.addGlucoseReading({
             provider: GlucoseProviders.LIBRE,
             unit: this.glucoseData?.unit,
             value: this.glucoseData?.currentGlucose.value,

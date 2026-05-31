@@ -1,66 +1,43 @@
 import { useTranslation } from "react-i18next";
-import { LineChart, Target, BarChart3, type LucideIcon } from "lucide-react";
 import { useSearchParams } from "react-router";
-import type { ReactElement } from "react";
-import { GlucoseGraph } from "@/app/modules/User/Glucose/GlucoseGraph.tsx";
-import { GlucoseTimeInRange } from "@/app/modules/User/Glucose/GlucoseTimeInRange.tsx";
-import { GlucoseSummary } from "@/app/modules/User/Glucose/GlucoseSummary.tsx";
-
-export const navigationItems: Array<{
-  label: string;
-  param: string;
-  icon: LucideIcon;
-  element: ReactElement;
-}> = [
-  {
-    label: "graph",
-    param: "graph",
-    icon: LineChart,
-    element: <GlucoseGraph />,
-  },
-  {
-    label: "timeInRange",
-    param: "time-in-range",
-    icon: Target,
-    element: <GlucoseTimeInRange />,
-  },
-  {
-    label: "summary",
-    param: "summary",
-    icon: BarChart3,
-    element: <GlucoseSummary />,
-  },
-];
+import { navigationItems } from "@/app/modules/User/Glucose/GlucoseNavigation.items.tsx";
 
 export function GlucoseNavigation() {
   const { t } = useTranslation();
   const [searchParams, setSearchParams] = useSearchParams();
 
-  return (
-    <div className="flex justify-center gap-3 w-full max-w-md mx-auto">
-      {navigationItems.map((navigationItem) => {
-        const Icon = navigationItem.icon;
-        const active = navigationItem.param == searchParams.get("section");
+  const activeSection = searchParams.get("section") ?? navigationItems[0].param;
 
-        return (
-          <button
-            key={navigationItem.param}
-            onClick={() => setSearchParams({ section: navigationItem.param })}
-            className={`flex-1 flex flex-col items-center gap-2 px-4 py-3 rounded-xl border transition-all duration-250 font-medium text-sm cursor-pointer ${
-              active
-                ? "bg-accent/20 border-ring text-primary shadow-sm"
-                : "bg-muted/50 border-border text-muted-foreground hover:bg-muted"
-            }`}
-          >
-            <Icon size={20} />
-            <span className="hidden sm:inline text-xs">
-              {t(
-                `pages.user.glucose.subpages.${navigationItem.label}.navigation`,
-              )}
-            </span>
-          </button>
-        );
-      })}
-    </div>
+  return (
+    <nav className="mx-auto flex w-full max-w-sm rounded-xl border border-border bg-card p-1.5 shadow-sm sm:w-fit sm:max-w-none">
+      <div className="flex w-full flex-col gap-1 sm:w-auto sm:flex-row">
+        {navigationItems.map((item) => {
+          const isActive = activeSection === item.param;
+          const Icon = item.icon;
+
+          return (
+            <button
+              key={item.param}
+              type="button"
+              onClick={() => {
+                const nextParams = new URLSearchParams(searchParams);
+                nextParams.set("section", item.param);
+                setSearchParams(nextParams);
+              }}
+              className={`flex w-full items-center justify-center gap-2 rounded-md border px-3 py-2 text-sm font-medium cursor-pointer transition-[border-color,background-color,color] duration-250 sm:w-auto ${
+                isActive
+                  ? "border-ring bg-muted text-accent-foreground"
+                  : "border-transparent text-muted-foreground hover:border-ring hover:text-primary"
+              }`}
+            >
+              <Icon className="size-4.5 shrink-0" />
+              <span>
+                {t(`pages.user.glucose.subpages.${item.label}.navigation`)}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+    </nav>
   );
 }

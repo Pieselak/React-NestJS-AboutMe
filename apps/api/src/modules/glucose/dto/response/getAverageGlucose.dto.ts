@@ -7,7 +7,7 @@ export class GetAverageGlucoseResponse {
     description: 'Indicates if there is sufficient data to calculate',
     example: true,
   })
-  sufficientData: boolean;
+  isDataSufficient: boolean;
 
   @ApiProperty({
     type: Number,

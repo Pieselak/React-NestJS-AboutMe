@@ -14,7 +14,7 @@ export class StatusService {
   async getStatus(): Promise<StatusCheckResponse> {
     let operationalStatus = ServiceStatus.OPERATIONAL;
 
-    const maintenance = await this.repository.getMaintenanceStatus();
+    const maintenance = await this.repository.getMaintenanceMode();
     if (maintenance && maintenance.enabled) {
       operationalStatus = ServiceStatus.MAINTENANCE;
     }
@@ -30,7 +30,7 @@ export class StatusService {
     body: MaintenanceModeInput,
   ): Promise<MaintenanceModeResponse> {
     try {
-      const maintenanceSetting = await this.repository.getMaintenanceStatus();
+      const maintenanceSetting = await this.repository.getMaintenanceMode();
       if (maintenanceSetting && maintenanceSetting.enabled === body.enable) {
         return {
           enabled: maintenanceSetting.enabled,
@@ -40,7 +40,7 @@ export class StatusService {
         };
       }
 
-      await this.repository.saveMaintenanceStatus(body.enable);
+      await this.repository.setMaintenanceMode(body.enable);
       return {
         enabled: body.enable,
         message: `Maintenance mode has been ${
