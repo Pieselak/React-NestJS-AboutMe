@@ -11,7 +11,7 @@ export const requestManager = {
   },
 };
 
-const baseURL = import.meta.env.VITE_API_BASEURL ?? "http://localhost:2100/";
+const baseURL = import.meta.env.VITE_API_URL ?? "http://localhost:2100/";
 
 export const ApiClient = new API({
   baseURL,
