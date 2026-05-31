@@ -72,7 +72,9 @@ export class GlucoseLibreAuthService {
         );
       default:
         this.logger.error(
-          response?.data?.data || response.statusText || 'Unknown error',
+          response?.data?.data ||
+            `${response.status} ${response.statusText}` ||
+            'Unknown error',
         );
         throw new ServiceUnavailableException(
           `Libre token endpoint is unavailable. ${response.status} ${response.statusText}`,
