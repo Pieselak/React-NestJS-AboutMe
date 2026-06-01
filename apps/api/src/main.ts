@@ -4,6 +4,7 @@ import { Logger, ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { NestExpressApplication } from '@nestjs/platform-express';
+import { join } from 'path';
 
 async function bootstrap() {
   const logger = new Logger('AppModule');
@@ -16,7 +17,7 @@ async function bootstrap() {
     allowedHeaders: ['Content-Type', 'Authorization'],
   });
 
-  app.useStaticAssets('public', {
+  app.useStaticAssets(join(process.cwd(), 'public'), {
     prefix: '/assets/',
   });
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
