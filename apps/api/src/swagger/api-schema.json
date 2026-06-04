@@ -721,6 +721,47 @@
           "Glucose Statistics"
         ]
       }
+    },
+    "/glucose/statistics/gmi": {
+      "get": {
+        "description": "Retrieves the Glucose Management Indicator.",
+        "operationId": "GlucoseStatisticsController_getGlucoseManagementIndicator",
+        "parameters": [
+          {
+            "name": "hours",
+            "required": false,
+            "in": "query",
+            "description": "Number of hours to calculate glucose reading, minimum 7 days",
+            "schema": {
+              "minimum": 168,
+              "example": 672,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved Glucose Management Indicator data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetGlucoseManagementIndicatorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "503": {
+            "description": "Service is unavailable"
+          }
+        },
+        "summary": "Get GMI",
+        "tags": [
+          "Glucose Statistics"
+        ]
+      }
     }
   },
   "info": {
@@ -804,7 +845,16 @@
       },
       "GetProjectResponse": {
         "type": "object",
-        "properties": {}
+        "properties": {
+          "uuid": {
+            "type": "string",
+            "description": "Unique identifier for the project",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          }
+        },
+        "required": [
+          "uuid"
+        ]
       },
       "CreateProjectBody": {
         "type": "object",
@@ -1353,6 +1403,30 @@
           "isDataSufficient",
           "value",
           "unit"
+        ]
+      },
+      "GetGlucoseManagementIndicatorResponse": {
+        "type": "object",
+        "properties": {
+          "isDataSufficient": {
+            "type": "boolean",
+            "description": "Indicates whether sufficient data is available for calculation",
+            "example": true
+          },
+          "value": {
+            "type": "number",
+            "description": "Value of the Glucose Management Indicator calculated based on the glucose readings in the specified period",
+            "example": 55
+          },
+          "hours": {
+            "type": "number",
+            "description": "Number of hours included in the calculation period",
+            "example": 168
+          }
+        },
+        "required": [
+          "isDataSufficient",
+          "value"
         ]
       }
     }

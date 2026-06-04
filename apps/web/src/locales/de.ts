@@ -165,6 +165,62 @@ const de = {
           title: "Über mich",
           subtitle:
             "Hallo! Mein Name ist Patryk Znamirowski und ich begeistere mich für Technologie, Programmierung und einen gesunden Lebensstil. Auf dieser Seite findest du Informationen zu meiner Karriere, meinen Interessen und den Projekten, an denen ich arbeite. Lerne mich besser kennen!",
+          profile: {
+            eyebrow: "Autor",
+            title: "Autor und Portfolio-Kontext",
+            description:
+              "Ein SchĂĽler, der ein Full-Stack-Portfolio und ein Glukosedatenmodul als praktischen Teil des Lernens entwickelt.",
+            longDescription:
+              "Das Portfolio zeigt Lernen durch Praxis: Projekte, Technologien und das Glukosemodul sind Teil einer gemeinsamen OberflĂ¤che statt einzelner zufĂ¤lliger Bereiche.",
+          },
+          status: {
+            eyebrow: "Status",
+            title: "Portfolio in aktiver Entwicklung",
+            description:
+              "Die Seite verbindet Informationen zum Autor, Projekte und eine lesbare Darstellung von Gesundheitsdaten.",
+            inProgress: "In Arbeit",
+          },
+          metrics: {
+            age: "Alter",
+            diabetes: "Diabetestyp",
+            birthYear: "Geburtsjahr",
+            frontend: "Frontend",
+            backend: "Backend",
+          },
+          badges: {
+            student: "SchĂĽler / Student",
+          },
+          navigationLabel: "Bereiche der Ăśber-mich-Seite",
+          sections: {
+            profile: "Profil",
+            stack: "Stack",
+            path: "Weg",
+          },
+          stackItems: {
+            react: "Komponenten, Routing und BenutzeroberflĂ¤che.",
+            nest: "API, Serverlogik und Datenintegrationen.",
+            tailwind: "Theme-Tokens, Layout und responsives UI-System.",
+          },
+          pathItems: {
+            now: {
+              label: "Jetzt",
+              title: "Lernen und Praxis",
+              description:
+                "Entwicklung der Webanwendung, Komponenten und Architektur.",
+            },
+            data: {
+              label: "Daten",
+              title: "Glukose und MODY2",
+              description:
+                "Arbeit mit Gesundheitsinformationen in einer lesbaren, ruhigen Form.",
+            },
+            next: {
+              label: "Weiter",
+              title: "Bessere Produkte",
+              description:
+                "Weitere Entwicklung von UI, Backend und prĂ¤sentierbaren Projekten.",
+            },
+          },
           intro: {
             eyebrow: "Persönliches Profil",
             title: "Ein Platz für die Geschichte hinter dem Code",
@@ -289,6 +345,9 @@ const de = {
           },
           sourceCode: {
             available: "Quellcode anzeigen",
+            openAction: "Quellcode anzeigen",
+            stateOpen: "Offener Quellcode",
+            stateClosed: "Geschlossener Quellcode",
             notAvailable: "Quellcode nicht verfügbar",
             closed: "Geschlossener Quellcode",
           },
@@ -297,6 +356,25 @@ const de = {
           status: "Status",
           team: "Team",
           technologies: "Technologien",
+          technologyCountOne: "{{count}} Technologie",
+          technologyCountMany: "{{count}} Technologien",
+          filterLabel: "Projektfilter",
+          filters: {
+            all: "Alle",
+            completed: "Abgeschlossene",
+            inProgress: "In Arbeit",
+            planned: "Geplante",
+          },
+          details: {
+            project: "Projekt",
+            description: "Beschreibung",
+            whatItDoes: "Was dieses Projekt zeigt",
+            meta: "Metadaten",
+            timeline: "Zeit und VerfĂĽgbarkeit",
+            team: "Team",
+            contributors: "Autoren und Rollen",
+            noContributors: "Keine Teamdaten.",
+          },
         },
 
         glucose: {
@@ -336,6 +414,7 @@ const de = {
             activatedAt: "Aktiviert am",
             expiresIn: "Läuft ab in",
             refresh: "Nächste Aktualisierung",
+            sensorLife: "Sensorlaufzeit",
             trends: {
               none: "Kein Trend verfügbar",
               risingFast: "Steigt schnell",
@@ -348,7 +427,14 @@ const de = {
             },
           },
           aboutDiabetes: {
+            subtitle:
+              "Ein kurzer Überblick über MODY2 und die Unterschiede zu den häufigsten Diabetesformen.",
             sections: {
+              overview: {
+                title: "Was MODY2 bedeutet",
+                content:
+                  "MODY2 ist eine monogene Diabetesform, meist durch eine GCK-Mutation verursacht. Sie führt häufig zu milder, stabiler Nüchternhyperglykämie seit Kindheit oder jungem Erwachsenenalter.",
+              },
               pathophysiology: {
                 title: "Pathophysiologie und Ursachen",
                 content:
@@ -369,6 +455,11 @@ const de = {
                 content:
                   "MODY 2 wird autosomal-dominant vererbt. Das bedeutet, dass die Mutation keine Generationen überspringt und die Familienanamnese (Diabetes bei einem Eltern- oder Großelternteil) stark belastet ist. Wenn ein Elternteil MODY-2-Diabetes hat, beträgt das Risiko, die Mutation an das Kind weiterzugeben, bei jeder Schwangerschaft genau 50 %.",
               },
+              management: {
+                title: "Klinisches Muster",
+                content:
+                  "Der verschobene Glukostat verursacht meist stabile Glukosewerte und ein geringes Risiko klassischer Diabeteskomplikationen. Die Behandlung ist meist lebensstilbasiert, mit besonderem Vorgehen in der Schwangerschaft.",
+              },
             },
             comparisonTable: {
               title: "Vergleich der Diabetestypen",
@@ -377,6 +468,30 @@ const de = {
                 mody2: "MODY 2 (GCK)",
                 type1: "Typ 1 (Autoimmun)",
                 type2: "Typ 2 (Metabolisch)",
+              },
+              etiology: {
+                feature: "Ätiologie",
+                type1: "Autoimmune Zerstörung der Betazellen.",
+                type2: "Insulinresistenz mit zunehmender Betazellbelastung.",
+                mody2: "Einzelne GCK-Genmutation mit verschobenem Glukose-Sollwert.",
+              },
+              ageOfOnset: {
+                feature: "Beginnalter",
+                type1: "Oft Kindheit, Jugend oder junges Erwachsenenalter.",
+                type2: "Meist Erwachsene, zunehmend auch jüngere Menschen.",
+                mody2: "Meist seit Geburt vorhanden und jung oder zufällig entdeckt.",
+              },
+              primaryTreatment: {
+                feature: "Primäre Behandlung",
+                type1: "Lebenslange Insulintherapie.",
+                type2: "Lebensstil, orale oder injizierbare Medikamente, manchmal Insulin.",
+                mody2: "Meist keine Medikamente außer in ausgewählten Schwangerschaftssituationen.",
+              },
+              ketoacidosisRisk: {
+                feature: "Ketoazidose-Risiko",
+                type1: "Hoch ohne Insulin.",
+                type2: "Niedrig bis moderat, höher bei schwerer Krankheit.",
+                mody2: "Sehr niedrig, da die Insulinsekretion erhalten bleibt.",
               },
               age: {
                 feature: "Erkrankungs- / Diagnosealter",
@@ -439,6 +554,25 @@ const de = {
             highest: "Höchster Wert",
             lowest: "Niedrigster Wert",
             timeInRange: "Zeit im Bereich",
+            gmi: {
+              eyebrow: "GMI",
+              title: "Glykämie-Management-Indikator",
+              insufficient:
+                "GMI benötigt mindestens 7 Tage Glukosedaten. Wähle einen längeren Zeitraum, um diese Schätzung anzuzeigen.",
+              insufficientDatabase:
+                "Der gewählte Zeitraum ist lang genug, aber in der Datenbank gibt es noch nicht genug Glukosedaten, um GMI zu berechnen.",
+              context:
+                "GMI schätzt einen HbA1c-ähnlichen Trend aus CGM-Daten und ist besonders nützlich zusammen mit der Zeit im Zielbereich.",
+            },
+          },
+          timeRange: {
+            label: "Glukose-Zeitraum",
+            "1d": "1T",
+            "7d": "7T",
+            "14d": "14T",
+            "30d": "30T",
+            "90d": "90T",
+            all: "Gesamt",
           },
           timeInRange: {
             period: "Verteilung der letzten {{hours}} Stunden.",
@@ -447,6 +581,9 @@ const de = {
             empty: "Keine Glukosewerte für das Diagramm verfügbar.",
             range: "Zielbereich: {{low}}-{{high}} {{unit}}",
             value: "Glukose",
+            targetZone: "Zielbereich",
+            inRangeSummary: "{{value}}% der sichtbaren Messwerte liegen im Zielbereich.",
+            referencePoints: "Referenzpunkte",
           },
           ranges: {
             high: "Kritisch hoch",
@@ -483,6 +620,11 @@ const de = {
           closeMenu: "Navigationsmenü schließen",
           changeLanguage: "Sprache wechseln",
           changeTheme: "Thema wechseln",
+          themes: {
+            light: "Hell",
+            dark: "Dunkel",
+            contrast: "Kontrast",
+          },
           pages: {
             home: "Startseite",
             aboutme: "Über mich",

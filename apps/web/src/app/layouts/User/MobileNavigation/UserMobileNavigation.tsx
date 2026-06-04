@@ -2,15 +2,13 @@ import { useState } from "react";
 import {
   LanguagesIcon,
   MenuIcon,
-  MoonStarIcon,
-  SunIcon,
   XIcon,
 } from "lucide-react";
 import type { navigationItem } from "@/app/layouts/User/User.layout.tsx";
 import { Link, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { motion, AnimatePresence } from "framer-motion";
-import useTheme from "@/app/hooks/useTheme.ts";
+import { ThemeToggle } from "@/app/components/theme/ThemeToggle.tsx";
 
 type UserMobileNavigationProps = {
   navigationItems: navigationItem[];
@@ -20,7 +18,6 @@ export function UserMobileNavigation({
   navigationItems,
 }: UserMobileNavigationProps) {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [theme, setTheme] = useTheme();
   const { pathname } = useLocation();
   const { t } = useTranslation();
 
@@ -90,19 +87,7 @@ export function UserMobileNavigation({
                     <LanguagesIcon className="size-4.5" />
                   </Link>
                 </motion.div>
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="flex items-center p-2.5 bg-card rounded-xl border border-border hover:border-ring cursor-pointer transition-[border-color] duration-250"
-                  onClick={() => setTheme(theme === "light" ? "dark" : "light")}
-                  aria-label={t("layouts.user.nav.changeTheme")}
-                >
-                  {theme === "light" ? (
-                    <MoonStarIcon className="size-4.5" />
-                  ) : (
-                    <SunIcon className="size-4.5" />
-                  )}
-                </motion.button>
+                <ThemeToggle />
               </div>
             </div>
 

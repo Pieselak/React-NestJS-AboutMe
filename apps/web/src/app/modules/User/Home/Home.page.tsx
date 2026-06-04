@@ -1,154 +1,237 @@
-import { motion } from "framer-motion";
-import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
-import { ArrowRight, FoldersIcon, CandyIcon, UserIcon } from "lucide-react";
-import { UserHeader } from "@/app/layouts/User/Header/UserHeader.tsx";
+import {
+  Activity,
+  ArrowRight,
+  Braces,
+  DatabaseZap,
+  FolderKanban,
+  GraduationCap,
+  HeartPulse,
+  Layers3,
+  UserRound,
+} from "lucide-react";
+import { useTranslation } from "react-i18next";
+import { BentoTile } from "@/app/components/ui/BentoTile.tsx";
+import { PageShell } from "@/app/components/ui/PageShell.tsx";
+import { StatusBadge } from "@/app/components/ui/StatusBadge.tsx";
+import { Reveal } from "@/app/components/motion/Reveal.tsx";
+
+const BIRTH_YEAR = 2009;
+
+function getAgeFromYear(year: number) {
+  return new Date().getFullYear() - year;
+}
 
 export function HomePage() {
   const { t } = useTranslation();
+  const age = getAgeFromYear(BIRTH_YEAR);
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.15,
-        delayChildren: 0.1,
-      },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.6 },
-    },
-  };
-
-  const cardVariants = {
-    hidden: { opacity: 0, scale: 0.9 },
-    visible: {
-      opacity: 1,
-      scale: 1,
-      transition: { duration: 0.5 },
-    },
-  };
-
-  const sections = [
+  const navigationTiles = [
     {
-      icon: UserIcon,
-      key: "aboutme",
-      link: "/about",
+      title: t("pages.user.aboutme.title"),
+      description: t("pages.user.home.sections.aboutme.description"),
+      href: "/about",
+      Icon: UserRound,
     },
     {
-      icon: FoldersIcon,
-      key: "projects",
-      link: "/projects",
+      title: t("pages.user.projects.title"),
+      description: t("pages.user.home.sections.projects.description"),
+      href: "/projects",
+      Icon: FolderKanban,
     },
     {
-      icon: CandyIcon,
-      key: "glucose",
-      link: "/glucose",
+      title: t("pages.user.glucose.title"),
+      description: t("pages.user.home.sections.glucose.description"),
+      href: "/glucose",
+      Icon: HeartPulse,
     },
   ];
 
+  const technologies = [
+    { name: "React", Icon: Braces },
+    { name: "NestJS", Icon: DatabaseZap },
+    { name: "TailwindCSS", Icon: Layers3 },
+  ];
+
   return (
-    <motion.div
-      className="space-y-6 w-full md:w-auto max-w-2xl"
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
-    >
-      <UserHeader
-        title={t("pages.user.home.title")}
-        subtitle={t("pages.user.home.subtitle")}
-      />
+    <PageShell className="max-w-6xl">
+      <Reveal>
+        <section className="grid gap-4 lg:grid-cols-[1.35fr_0.65fr]">
+          <BentoTile
+            eyebrow={t("pages.user.home.hero.eyebrow", {
+              defaultValue: "Portfolio",
+            })}
+            title={t("pages.user.home.hero.title", {
+              defaultValue: "Patryk - uczeń i student full-stack developmentu",
+            })}
+            description={t("pages.user.home.hero.description", {
+              defaultValue:
+                "To portfolio łączy naukę programowania, projekty webowe i osobisty kontekst zdrowotny. Jest miejscem, w którym React spotyka NestJS, a dane są przedstawione spokojnie i czytelnie.",
+            })}
+            className="min-h-[22rem]"
+          >
+            <div className="mt-6 flex flex-wrap gap-2">
+              <StatusBadge tone="gray">
+                {t("pages.user.home.badges.student", {
+                  defaultValue: "Uczeń / student",
+                })}
+              </StatusBadge>
+              <StatusBadge tone="green">
+                {t("pages.user.home.badges.fullstack", {
+                  defaultValue: "Full-stack learner",
+                })}
+              </StatusBadge>
+              <StatusBadge tone="yellow">
+                {t("pages.user.home.badges.mody2", {
+                  defaultValue: "MODY2",
+                })}
+              </StatusBadge>
+            </div>
 
-      {/* Call to Action Cards */}
-      <motion.div
-        className="grid grid-cols-1 md:grid-cols-3 gap-4"
-        initial="hidden"
-        animate="visible"
-        transition={{ staggerChildren: 0.1 }}
-      >
-        {sections.map((section, index) => {
-          const Icon = section.icon;
-          return (
-            <motion.div
-              key={section.link}
-              variants={cardVariants}
-              whileHover={{ y: -8, transition: { duration: 0.3 } }}
-              custom={index}
-            >
-              <Link
-                to={section.link}
-                className="flex flex-col h-full p-5 bg-card border border-border rounded-xl hover:border-ring shadow-sm hover:shadow-md group transition-all duration-300 overflow-hidden relative"
-              >
-                {/* Content */}
-                <div className="relative z-10 flex flex-col items-start gap-3">
-                  <motion.div
-                    className="p-3 bg-accent/10 rounded-lg group-hover:bg-accent/20 transition-colors"
-                    whileHover={{ rotate: 5, scale: 1.1 }}
-                  >
-                    <Icon
-                      size={24}
-                      className="text-accent group-hover:text-accent transition-colors"
-                    />
-                  </motion.div>
+            <div className="mt-10 grid gap-3 sm:grid-cols-3">
+              <div className="rounded-tile border border-border bg-surface-raised p-4">
+                <p className="text-3xl font-black text-foreground">Patryk</p>
+                <p className="mt-1 text-sm font-bold text-muted-foreground">
+                  {t("pages.user.home.facts.author", {
+                    defaultValue: "Autor portfolio",
+                  })}
+                </p>
+              </div>
+              <div className="rounded-tile border border-border bg-surface-raised p-4">
+                <p className="text-3xl font-black text-foreground">{age}</p>
+                <p className="mt-1 text-sm font-bold text-muted-foreground">
+                  {t("pages.user.home.facts.age", {
+                    defaultValue: "lat, liczone od 2009",
+                  })}
+                </p>
+              </div>
+              <div className="rounded-tile border border-border bg-surface-raised p-4">
+                <p className="text-3xl font-black text-foreground">MODY2</p>
+                <p className="mt-1 text-sm font-bold text-muted-foreground">
+                  {t("pages.user.home.facts.diabetes", {
+                    defaultValue: "typ cukrzycy",
+                  })}
+                </p>
+              </div>
+            </div>
+          </BentoTile>
 
-                  <div className="space-y-2">
-                    <h3 className="font-semibold text-primary group-hover:text-accent transition-colors">
-                      {t(`pages.user.${section.key}.title`)}
-                    </h3>
-                    <p className="text-sm text-muted-foreground">
-                      {t(`pages.user.home.sections.${section.key}.description`)}
-                    </p>
-                  </div>
+          <BentoTile
+            eyebrow={t("pages.user.home.profile.eyebrow", {
+              defaultValue: "Autor",
+            })}
+            title={t("pages.user.home.profile.title", {
+              defaultValue: "Technologia, szkoła i konsekwencja",
+            })}
+          >
+            <div className="space-y-5">
+              <div className="flex size-16 items-center justify-center rounded-tile border border-border bg-surface-raised text-primary">
+                <GraduationCap className="size-8" />
+              </div>
+              <p className="text-sm leading-7 text-muted-foreground">
+                {t("pages.user.home.profile.description", {
+                  defaultValue:
+                    "Patryk rozwija portfolio jako uczeń/student zainteresowany aplikacjami full-stack. Strona pokazuje projekty, kierunek nauki oraz dane glukozy w formie transparentnego, technicznego eksperymentu.",
+                })}
+              </p>
+            </div>
+          </BentoTile>
+        </section>
+      </Reveal>
 
-                  <motion.div
-                    className="mt-auto flex items-center gap-2 text-accent text-sm font-medium"
-                    whileHover={{ x: 4 }}
-                  >
-                    {t("pages.user.home.explore")}
-                    <ArrowRight size={16} />
-                  </motion.div>
+      <Reveal>
+        <section className="grid gap-4 lg:grid-cols-[0.8fr_1.2fr]">
+          <BentoTile
+            eyebrow={t("pages.user.home.stack.eyebrow", {
+              defaultValue: "Stack",
+            })}
+            title={t("pages.user.home.stack.title", {
+              defaultValue: "Technologie w centrum portfolio",
+            })}
+            description={t("pages.user.home.stack.description", {
+              defaultValue:
+                "Frontend, backend i styling są traktowane jako jeden produktowy system, a nie osobne wyspy kodu.",
+            })}
+          >
+            <div className="grid gap-3">
+              {technologies.map(({ name, Icon }) => (
+                <div
+                  key={name}
+                  className="flex items-center gap-3 rounded-tile border border-border bg-surface-raised p-4"
+                >
+                  <span className="flex size-10 items-center justify-center rounded-control border border-border bg-surface text-primary">
+                    <Icon className="size-5" />
+                  </span>
+                  <p className="text-lg font-black text-foreground">{name}</p>
                 </div>
-              </Link>
-            </motion.div>
-          );
-        })}
-      </motion.div>
+              ))}
+            </div>
+          </BentoTile>
 
-      {/* Additional Info Section */}
-      <motion.div
-        className="bg-card border border-border rounded-xl p-6 md:p-8"
-        variants={itemVariants}
-        initial="hidden"
-        animate="visible"
-      >
-        <div className="space-y-4">
-          <h2 className="text-2xl font-bold text-primary">
-            {t("pages.user.home.welcome")}
-          </h2>
-          <p className="text-muted-foreground leading-relaxed">
-            {t("pages.user.home.welcomeDescription")}
-          </p>
-          <div className="flex flex-wrap gap-2 pt-4">
-            {(
-              t("pages.user.home.skills", { returnObjects: true }) as string[]
-            ).map((skill: string) => (
-              <span
-                key={skill}
-                className="inline-block px-3 py-1 bg-accent/10 text-accent rounded-full text-sm font-medium"
-              >
-                {skill}
-              </span>
-            ))}
-          </div>
-        </div>
-      </motion.div>
-    </motion.div>
+          <BentoTile
+            eyebrow={t("pages.user.home.theme.eyebrow", {
+              defaultValue: "Tematyka",
+            })}
+            title={t("pages.user.home.theme.title", {
+              defaultValue: "Portfolio jako mapa nauki",
+            })}
+          >
+            <div className="grid gap-4 md:grid-cols-2">
+              <div className="rounded-tile border border-border bg-surface-raised p-4">
+                <Activity className="mb-4 size-6 text-primary" />
+                <h3 className="font-black text-foreground">
+                  {t("pages.user.home.theme.learning.title", {
+                    defaultValue: "Nauka przez projekty",
+                  })}
+                </h3>
+                <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                  {t("pages.user.home.theme.learning.description", {
+                    defaultValue:
+                      "Strona prezentuje praktyczną naukę budowania interfejsów, API i modułów danych.",
+                  })}
+                </p>
+              </div>
+              <div className="rounded-tile border border-border bg-surface-raised p-4">
+                <HeartPulse className="mb-4 size-6 text-primary" />
+                <h3 className="font-black text-foreground">
+                  {t("pages.user.home.theme.health.title", {
+                    defaultValue: "Dane zdrowotne bez sensacji",
+                  })}
+                </h3>
+                <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                  {t("pages.user.home.theme.health.description", {
+                    defaultValue:
+                      "Cukrzyca MODY2 jest tu pokazana przez spokojną wizualizację danych, a nie jako ozdobnik.",
+                  })}
+                </p>
+              </div>
+            </div>
+          </BentoTile>
+        </section>
+      </Reveal>
+
+      <Reveal>
+        <section className="grid gap-4 md:grid-cols-3">
+          {navigationTiles.map(({ title, description, href, Icon }) => (
+            <Link
+              key={href}
+              to={href}
+              className="group rounded-tile border border-border bg-surface p-4 transition-[border-color,background-color] duration-200 hover:border-ring hover:bg-surface-raised md:p-5"
+            >
+              <div className="mb-5 flex items-center justify-between gap-3">
+                <span className="flex size-11 items-center justify-center rounded-control border border-border bg-surface-raised text-primary">
+                  <Icon className="size-5" />
+                </span>
+                <ArrowRight className="size-5 text-muted-foreground transition-transform duration-200 group-hover:translate-x-1 group-hover:text-primary" />
+              </div>
+              <h2 className="text-lg font-black text-foreground">{title}</h2>
+              <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                {description}
+              </p>
+            </Link>
+          ))}
+        </section>
+      </Reveal>
+    </PageShell>
   );
 }

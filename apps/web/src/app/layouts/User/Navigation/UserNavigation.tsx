@@ -1,16 +1,15 @@
-import useTheme from "@/app/hooks/useTheme.ts";
-import { LanguagesIcon, MoonStarIcon, SunIcon } from "lucide-react";
+import { LanguagesIcon } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import type { navigationItem } from "@/app/layouts/User/User.layout.tsx";
 import { useTranslation } from "react-i18next";
 import { motion } from "framer-motion";
+import { ThemeToggle } from "@/app/components/theme/ThemeToggle.tsx";
 
 type userNavigationProps = {
   navigationItems: navigationItem[];
 };
 
 export function UserNavigation({ navigationItems }: userNavigationProps) {
-  const [theme, setTheme] = useTheme();
   const { pathname } = useLocation();
   const { t } = useTranslation();
 
@@ -42,14 +41,14 @@ export function UserNavigation({ navigationItems }: userNavigationProps) {
           <LanguagesIcon className="size-4.5" />
         </Link>
       </motion.div>
-      <nav className="flex bg-card backdrop-blur-sm border border-border rounded-xl p-1.5 gap-1">
+      <nav className="flex bg-surface backdrop-blur-sm border border-border rounded-tile p-1.5 gap-1">
         {navigationItems.map((navigationItem) => (
           <Link
             key={navigationItem.url}
             to={navigationItem.url}
-            className={`flex gap-1 items-center border px-2 py-1 rounded-md cursor-pointer font-semibold transition-[border-color, background-color] duration-250 ${
+            className={`flex gap-1 items-center border px-2 py-1 rounded-control cursor-pointer font-semibold transition-[border-color,background-color,color] duration-200 ${
               pathname.split("/")[1] === navigationItem.url.substring(1)
-                ? "border-ring bg-muted text-accent-foreground"
+                ? "border-border-strong bg-surface-raised text-primary"
                 : "border-transparent text-muted-foreground hover:border-ring hover:text-primary"
             }`}
           >
@@ -60,19 +59,7 @@ export function UserNavigation({ navigationItems }: userNavigationProps) {
           </Link>
         ))}
       </nav>
-      <motion.button
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-        className="flex items-center p-2.5 bg-card rounded-xl border border-border hover:border-ring cursor-pointer transition-[border-color] duration-250"
-        onClick={() => setTheme(theme === "light" ? "dark" : "light")}
-        aria-label={t("layouts.user.nav.changeTheme")}
-      >
-        {theme === "light" ? (
-          <MoonStarIcon className="size-4.5" />
-        ) : (
-          <SunIcon className="size-4.5" />
-        )}
-      </motion.button>
+      <ThemeToggle />
     </motion.div>
   );
 }

@@ -409,6 +409,24 @@ export interface GetLowestGlucoseResponse {
   hours?: number;
 }
 
+export interface GetGlucoseManagementIndicatorResponse {
+  /**
+   * Indicates whether sufficient data is available for calculation
+   * @example true
+   */
+  isDataSufficient: boolean;
+  /**
+   * Value of the Glucose Management Indicator calculated based on the glucose readings in the specified period
+   * @example 55
+   */
+  value: number;
+  /**
+   * Number of hours included in the calculation period
+   * @example 168
+   */
+  hours?: number;
+}
+
 import type {
   AxiosInstance,
   AxiosRequestConfig,
@@ -980,6 +998,33 @@ export class API<
     ) =>
       this.request<GetLowestGlucoseResponse, void>({
         path: `/glucose/statistics/lowest`,
+        method: "GET",
+        query: query,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * @description Retrieves the Glucose Management Indicator.
+     *
+     * @tags Glucose Statistics
+     * @name GlucoseStatisticsControllerGetGlucoseManagementIndicator
+     * @summary Get GMI
+     * @request GET:/glucose/statistics/gmi
+     */
+    glucoseStatisticsControllerGetGlucoseManagementIndicator: (
+      query?: {
+        /**
+         * Number of hours to calculate glucose reading, minimum 7 days
+         * @min 168
+         * @example 672
+         */
+        hours?: number;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<GetGlucoseManagementIndicatorResponse, void>({
+        path: `/glucose/statistics/gmi`,
         method: "GET",
         query: query,
         format: "json",

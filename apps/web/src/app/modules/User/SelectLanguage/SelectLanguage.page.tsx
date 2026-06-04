@@ -48,7 +48,7 @@ export function SelectLanguagePage() {
               <div
                 className={`flex-1 flex flex-col items-center gap-2 w-full px-4 py-3 rounded-xl border transition-all duration-250 font-medium cursor-pointer ${
                   currentLanguage === language.code
-                    ? "bg-accent/20 border-ring text-primary shadow-sm"
+                    ? "bg-accent/20 border-ring text-primary"
                     : "bg-muted/50 border-border text-muted-foreground hover:bg-muted"
                 }`}
               >

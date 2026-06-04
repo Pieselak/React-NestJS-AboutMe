@@ -35,12 +35,13 @@ function App() {
   const savedLanguage = getSavedLanguageCode();
 
   useEffect(() => {
-    !savedLanguage &&
+    if (!savedLanguage) {
       navigate("/language", {
         state: { langRedirect: location.pathname },
       });
+    }
     i18n.changeLanguage(savedLanguage || getFirstLanguageCode());
-  }, []);
+  }, [location.pathname, navigate, savedLanguage]);
 
   return (
     <Suspense fallback={<LoadingPage />}>
