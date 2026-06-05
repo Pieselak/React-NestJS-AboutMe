@@ -86,7 +86,12 @@ export function GlucoseChartPanel({ selectedRange }: GlucoseChartPanelProps) {
       <PanelLoadingOverlay visible={graphQuery.isFetching} />
       <div className="grid gap-4 lg:grid-cols-[1fr_220px]">
         <div className="h-88 rounded-tile border border-border bg-surface-inset p-3">
-          <ResponsiveContainer width="100%" height="100%" minHeight={100}>
+          <ResponsiveContainer
+            initialDimension={{ width: 100, height: 100 }}
+            width="100%"
+            height="100%"
+            minHeight={100}
+          >
             <AreaChart
               data={points}
               margin={{ top: 18, right: 14, left: -8, bottom: 8 }}

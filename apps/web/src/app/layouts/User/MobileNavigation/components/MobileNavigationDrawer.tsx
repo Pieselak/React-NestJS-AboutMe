@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import type { navigationItem } from "@/app/layouts/User/User.layout.tsx";
 import { MobileNavigationDrawerItem } from "@/app/layouts/User/MobileNavigation/components/MobileNavigationDrawerItem.tsx";
+import { UserAuthCard } from "@/app/layouts/User/components/UserAuthCard.tsx";
 
 type MobileNavigationDrawerProps = {
   isOpen: boolean;
@@ -62,6 +63,7 @@ export function MobileNavigationDrawer({
               aria-label={t("layouts.user.nav.mobileNavigation")}
               initial="hidden"
               animate="visible"
+              className="flex flex-1 flex-col"
             >
               <motion.ul
                 className="grid gap-2"
@@ -83,6 +85,9 @@ export function MobileNavigationDrawer({
                   />
                 ))}
               </motion.ul>
+              <div className="mt-auto border-t border-border pt-3">
+                <UserAuthCard mobile onNavigate={onClose} />
+              </div>
             </motion.nav>
           </motion.aside>
         </motion.div>

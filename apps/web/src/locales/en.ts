@@ -6,6 +6,11 @@ const en = {
     flag: GB,
   },
   translation: {
+    roles: {
+      admin: "Administrator",
+      user: "User",
+    },
+
     pages: {
       loading: {
         title: "Loading",
@@ -51,12 +56,16 @@ const en = {
       auth: {
         fields: {
           name: "Full name",
+          username: "Username",
+          identifier: "Email or username",
           email: "Email address",
           password: "Password",
           confirmPassword: "Confirm password",
         },
         placeholders: {
           name: "Jane Doe",
+          username: "jane",
+          identifier: "jane or jane@example.com",
           email: "jane@example.com",
           password: "At least 8 characters",
           confirmPassword: "Repeat password",
@@ -67,11 +76,17 @@ const en = {
         },
         errors: {
           name: "Enter your full name.",
+          username: "Enter a username with at least 3 characters.",
+          identifierRequired: "Enter your email address or username.",
           email: "Enter a valid email address.",
           passwordRequired: "Enter your password.",
           passwordLength: "Password must be at least 8 characters.",
           passwordMatch: "Passwords must match.",
           terms: "Accept the terms of service.",
+          invalidCredentials: "Email, username, or password is incorrect.",
+          accountExists:
+            "An account with this email or username already exists.",
+          server: "The request could not be completed. Try again in a moment.",
         },
         login: {
           title: "Login",
@@ -84,10 +99,11 @@ const en = {
           remember: "Remember me",
           forgotPassword: "Forgot password?",
           submit: "Sign in",
+          submitting: "Signing in",
           noAccount: "Do not have an account yet?",
           createAccount: "Create account",
-          demoNotice:
-            "This is a frontend view. After valid input, it sets the local logged-in state.",
+          apiNotice:
+            "Your session will be stored locally and attached to protected API requests.",
         },
         register: {
           title: "Register",
@@ -100,10 +116,11 @@ const en = {
           accept: "I accept the",
           terms: "terms of service",
           submit: "Register",
+          submitting: "Creating account",
           hasAccount: "Already have an account?",
           signIn: "Go to login",
-          demoNotice:
-            "Registration currently uses local app state until the API endpoint is connected.",
+          apiNotice:
+            "The first created account receives administrator permissions from the API.",
         },
         reset: {
           title: "Reset password",
@@ -124,9 +141,7 @@ const en = {
         },
       },
 
-
       user: {
-
         termsOfService: {
           title: "Terms of Service",
           subtitle:
@@ -208,9 +223,130 @@ const en = {
           },
         },
 
-        home: {},
+        home: {
+          hero: {
+            eyebrow: "Full-stack developer in progress",
+            name: "Patryk Znamirowski",
+            headline:
+              "An ambitious young programmer who turns ideas into working web applications with passion.",
+            description:
+              "Every day I develop my programming skills by combining school theory with practical coding. I create modern websites and applications while experimenting with new technologies. I am actively looking for opportunities to gain my first experience and enter the professional IT world.",
+            primaryAction: "View my projects",
+            secondaryAction: "Contact me",
+            imageAlt: "Patryk Znamirowski - profile photo",
+          },
+          links: {
+            github: "Patryk's GitHub profile",
+            linkedin: "Patryk's LinkedIn profile",
+            email: "Send Patryk an email",
+          },
+          profileCard: {
+            eyebrow: "Bielsko-Biala / technical school",
+            title: "Programming technician student",
+            description:
+              "I build personal projects, grow my React and NestJS stack, and look for my first real challenges in the IT industry.",
+          },
+          metrics: {
+            education: {
+              value: "3 years",
+              label:
+                "Of active learning at technical school in the programming technician track.",
+            },
+            practice: {
+              value: "Hundreds of hours",
+              label: "Spent independently exploring code after school.",
+            },
+            motivation: {
+              value: "100%",
+              label:
+                "Motivation to grow and gain my first commercial experience.",
+            },
+          },
+          focus: {
+            title: "What you will find here",
+            description:
+              "This portfolio presents my projects, current learning stage, and practical experiments with web applications.",
+            items: {
+              projects: {
+                title: "Web projects",
+                description:
+                  "Real applications and experiments where I practice frontend, backend, and API integrations.",
+              },
+              learning: {
+                title: "Learning path",
+                description:
+                  "A short story of how curiosity about Roblox games led me toward building web applications.",
+              },
+              glucose: {
+                title: "CGM integration",
+                description:
+                  "A glucose data module showing how I connect the frontend to a real data source.",
+              },
+            },
+          },
+        },
 
-        aboutme: {},
+        aboutme: {
+          title: "About me",
+          subtitle:
+            "Get to know my learning stage, working style, and what I am looking for in my first professional challenges.",
+          story: {
+            eyebrow: "Story",
+            title: "From curiosity to my own applications",
+            description:
+              "I treat programming as a craft best learned through real projects, documentation, and consistent code improvement.",
+            start:
+              "Hi! I am 17 and I study at a technical school in Bielsko-Biala in the programming technician track. My programming journey started with simple curiosity through creating Roblox games, and today it has grown into regularly building my own, increasingly advanced projects.",
+            learning:
+              "In my free time, I try to go far beyond the school curriculum. I independently explore modern frameworks, learn good practices for writing clean code, and try to understand how to build applications that are both efficient and user-friendly.",
+            goal: "My main goal now is to test my skills against business reality. I would gladly take on an internship, traineeship, or junior-level challenge to learn from more experienced developers in a real working environment.",
+          },
+          experience: {
+            eyebrow: "Current stage",
+            title: "Learning and first practice",
+            items: {
+              school: {
+                title: "Technical school student",
+                description:
+                  "I study in Bielsko-Biala in the programming technician track and develop my own projects beyond the school curriculum.",
+              },
+              practice: {
+                title: "1 month of Laravel practice",
+                description:
+                  "I completed practical training where I worked with the Laravel framework and learned a more realistic rhythm of application development.",
+              },
+            },
+          },
+          tech: {
+            eyebrow: "Stack",
+            title: "Technologies I am developing now",
+            description:
+              "My strongest focus is building web applications in the React, NestJS, and TailwindCSS ecosystem.",
+          },
+          strengths: {
+            eyebrow: "Strengths",
+            title: "How I approach learning and problems",
+            description:
+              "I am at the beginning of my path, and that is exactly why I value flexibility, independence, and consistency.",
+            items: {
+              curiosity: {
+                title: "A strong hunger for knowledge",
+                description:
+                  "I do not limit myself to what I need for school assignments. I read documentation, watch tutorials, and test current market technologies to stay close to trends.",
+              },
+              flexibility: {
+                title: "No bad habits and high flexibility",
+                description:
+                  "I am at the beginning of my journey, which means I absorb knowledge quickly and adapt fast to new standards, tools, and team methodologies.",
+              },
+              determination: {
+                title: "Determination in solving problems",
+                description:
+                  "When I encounter a bug, I do not give up until I understand its cause. I can search for solutions independently, which strengthens my technical independence.",
+              },
+            },
+          },
+        },
 
         projects: {
           title: "My projects",
@@ -389,6 +525,13 @@ const en = {
             aboutme: "About me",
             projects: "Projects",
             glucose: "Blood sugar",
+          },
+          account: {
+            login: "Sign in",
+            logout: "Log out",
+            expand: "Open account menu",
+            profile: "Profile",
+            settings: "Settings",
           },
         },
         footer: {

@@ -40,7 +40,7 @@ export function ThemeToggle({ className = "", ...props }: ThemeToggleProps) {
       {...props}
       type="button"
       onClick={cycleTheme}
-      className={`flex items-center justify-center p-2.5 bg-card rounded-xl border border-border hover:border-ring cursor-pointer transition-[border-color] duration-250 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring ${className}`}
+      className={`flex items-center justify-center rounded-control border border-border bg-card p-2.5 transition-[border-color] duration-250 hover:border-ring focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring ${className}`}
       aria-label={t("layouts.user.nav.changeTheme")}
       title={t(`layouts.user.nav.themes.${theme}`)}
     >

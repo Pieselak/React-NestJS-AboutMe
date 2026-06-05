@@ -64,9 +64,9 @@
     --orange-glucose: var(--orange-fill);
     --red-glucose: var(--red-fill);
 
-    --font-sans: 'Manrope', 'Ubuntu Sans', ui-sans-serif, system-ui, sans-serif;
+    --font-sans: 'Manrope', ui-sans-serif, system-ui, sans-serif;
     --font-serif: "Ubuntu", ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
-    --font-mono: "Ubuntu Sans", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    --font-mono: "Ubuntu", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 
     --radius: 0.5rem;
     --radius-tile: 8px;
@@ -307,7 +307,7 @@
     }
 
     html.contrast {
-        color-scheme: light;
+        color-scheme: dark;
     }
 
     body {

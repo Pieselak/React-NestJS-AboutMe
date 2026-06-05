@@ -1,111 +1,127 @@
-import { ArrowRightIcon, LockIcon, MailIcon } from "lucide-react";
+import { ArrowRightIcon } from "lucide-react";
 import { type FormEvent, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
-import { Reveal } from "@/app/components/motion/Reveal.tsx";
 import { Button } from "@/app/components/ui/Button.tsx";
 import { Notice } from "@/app/components/ui/Notice.tsx";
 import { PageShell } from "@/app/components/ui/PageShell.tsx";
-import { UserHeader } from "@/app/layouts/User/Header/UserHeader.tsx";
-import { useAuthStore } from "@/app/modules/Auth/authStore.ts";
-import { AuthPanel } from "@/app/modules/Auth/components/AuthPanel.tsx";
+import { AuthField } from "@/app/modules/Auth/components/AuthField.tsx";
+import { AuthFormPanel } from "@/app/modules/Auth/components/AuthFormPanel.tsx";
 import { AuthPasswordField } from "@/app/modules/Auth/components/AuthPasswordField.tsx";
-import { AuthTextField } from "@/app/modules/Auth/components/AuthTextField.tsx";
-import { isEmail } from "@/app/modules/Auth/utils/authValidation.ts";
+import { useLoginMutation } from "@/app/api/mutations";
+import {
+  getZodFieldErrors,
+  loginSchema,
+  type AuthFieldErrors,
+  type LoginFormValues,
+} from "@/app/modules/Auth/utils/authValidation.ts";
+import { getAuthRequestError } from "@/app/modules/Auth/utils/authErrors.ts";
+
+const initialValues: LoginFormValues = {
+  identifier: "",
+  password: "",
+};
 
 export function LoginPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const setLoggedIn = useAuthStore((state) => state.setLoggedIn);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [errors, setErrors] = useState({ email: "", password: "" });
+  const loginMutation = useLoginMutation();
+  const [values, setValues] = useState<LoginFormValues>(initialValues);
+  const [fieldErrors, setFieldErrors] = useState<AuthFieldErrors<LoginFormValues>>({});
+  const [requestError, setRequestError] = useState<string>();
+  const isSubmitting = loginMutation.isPending;
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    setRequestError(undefined);
 
-    const nextErrors = {
-      email: isEmail(email) ? "" : t("pages.auth.errors.email"),
-      password: password ? "" : t("pages.auth.errors.passwordRequired"),
-    };
+    const errors = getZodFieldErrors(loginSchema, values, (code) =>
+      t(`pages.auth.errors.${code}`),
+    );
+    setFieldErrors(errors);
 
-    setErrors(nextErrors);
-
-    if (nextErrors.email || nextErrors.password) {
+    if (Object.keys(errors).length > 0) {
       return;
     }
 
-    setLoggedIn(true);
-    navigate("/home");
+    try {
+      await loginMutation.mutateAsync(values);
+      navigate("/home");
+    } catch (error) {
+      setRequestError(t(`pages.auth.errors.${getAuthRequestError(error)}`));
+    }
   }
 
   return (
-    <PageShell>
-      <UserHeader
-        title={t("pages.auth.login.title")}
-        subtitle={t("pages.auth.login.subtitle")}
-      />
+    <PageShell className="grid min-h-[calc(100dvh-11rem)] place-items-center">
+      <AuthFormPanel
+        eyebrow={t("pages.auth.login.eyebrow")}
+        title={t("pages.auth.login.formTitle")}
+      >
+        <form className="space-y-4" onSubmit={handleSubmit} noValidate>
+          {requestError && <Notice tone="red">{requestError}</Notice>}
 
-      <Reveal>
-        <AuthPanel
-          eyebrow={t("pages.auth.login.eyebrow")}
-          title={t("pages.auth.login.formTitle")}
-          description={t("pages.auth.login.description")}
-          footerLabel={t("pages.auth.login.noAccount")}
-          footerAction={t("pages.auth.login.createAccount")}
-          footerTo="/register"
-        >
-          <form className="space-y-4" onSubmit={handleSubmit} noValidate>
-            <AuthTextField
-              id="login-email"
-              label={t("pages.auth.fields.email")}
-              icon={<MailIcon className="size-4" />}
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
-              error={errors.email}
-              type="email"
-              autoComplete="email"
-              placeholder={t("pages.auth.placeholders.email")}
-            />
+          <AuthField
+            id="login-identifier"
+            label={t("pages.auth.fields.identifier")}
+            placeholder={t("pages.auth.placeholders.identifier")}
+            autoComplete="username"
+            value={values.identifier}
+            error={fieldErrors.identifier}
+            disabled={isSubmitting}
+            onChange={(event) =>
+              setValues((current) => ({
+                ...current,
+                identifier: event.target.value,
+              }))
+            }
+          />
 
-            <AuthPasswordField
-              id="login-password"
-              label={t("pages.auth.fields.password")}
-              icon={<LockIcon className="size-4" />}
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
-              error={errors.password}
-              autoComplete="current-password"
-              placeholder={t("pages.auth.placeholders.password")}
-              showLabel={t("pages.auth.actions.showPassword")}
-              hideLabel={t("pages.auth.actions.hidePassword")}
-            />
+          <AuthPasswordField
+            id="login-password"
+            label={t("pages.auth.fields.password")}
+            placeholder={t("pages.auth.placeholders.password")}
+            autoComplete="current-password"
+            value={values.password}
+            error={fieldErrors.password}
+            disabled={isSubmitting}
+            onChange={(event) =>
+              setValues((current) => ({
+                ...current,
+                password: event.target.value,
+              }))
+            }
+          />
 
-            <div className="flex flex-wrap items-center justify-between gap-3">
-              <label className="inline-flex items-center gap-2 text-sm font-semibold text-muted-foreground">
-                <input
-                  type="checkbox"
-                  className="size-4 rounded-control accent-primary"
-                />
-                {t("pages.auth.login.remember")}
-              </label>
-              <Link
-                to="/reset-password"
-                className="text-sm font-black text-foreground underline-offset-4 hover:underline"
-              >
-                {t("pages.auth.login.forgotPassword")}
-              </Link>
-            </div>
+          <div className="flex justify-end">
+            <Link
+              to="/reset-password"
+              className="text-sm font-black text-muted-foreground transition-colors duration-200 hover:text-primary"
+            >
+              {t("pages.auth.login.forgotPassword")}
+            </Link>
+          </div>
 
-            <Button type="submit" variant="primary" className="w-full">
-              {t("pages.auth.login.submit")}
-              <ArrowRightIcon className="size-4" />
-            </Button>
+          <Button
+            type="submit"
+            variant="primary"
+            disabled={isSubmitting}
+            className="w-full"
+          >
+            {isSubmitting
+              ? t("pages.auth.login.submitting")
+              : t("pages.auth.login.submit")}
+            <ArrowRightIcon className="size-4" aria-hidden />
+          </Button>
+        </form>
 
-            <Notice>{t("pages.auth.login.demoNotice")}</Notice>
-          </form>
-        </AuthPanel>
-      </Reveal>
+        <p className="mt-5 text-center text-sm font-bold text-muted-foreground">
+          {t("pages.auth.login.noAccount")}{" "}
+          <Link className="text-foreground hover:text-primary" to="/register">
+            {t("pages.auth.login.createAccount")}
+          </Link>
+        </p>
+      </AuthFormPanel>
     </PageShell>
   );
 }

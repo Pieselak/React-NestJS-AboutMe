@@ -6,6 +6,11 @@ const pl = {
     flag: PL,
   },
   translation: {
+    roles: {
+      admin: "Administrator",
+      user: "Użytkownik",
+    },
+
     pages: {
       loading: {
         title: "Ładowanie",
@@ -52,12 +57,16 @@ const pl = {
       auth: {
         fields: {
           name: "Imię i nazwisko",
+          username: "Nazwa użytkownika",
+          identifier: "E-mail lub login",
           email: "Adres e-mail",
           password: "Hasło",
           confirmPassword: "Powtórz hasło",
         },
         placeholders: {
           name: "Jan Kowalski",
+          username: "jan",
+          identifier: "jan lub jan@example.com",
           email: "jan@example.com",
           password: "Minimum 8 znaków",
           confirmPassword: "Powtórz hasło",
@@ -68,11 +77,17 @@ const pl = {
         },
         errors: {
           name: "Podaj imię i nazwisko.",
+          username: "Podaj nazwę użytkownika z minimum 3 znakami.",
+          identifierRequired: "Podaj e-mail lub nazwę użytkownika.",
           email: "Podaj poprawny adres e-mail.",
           passwordRequired: "Podaj hasło.",
           passwordLength: "Hasło musi mieć co najmniej 8 znaków.",
           passwordMatch: "Hasła muszą być takie same.",
           terms: "Zaakceptuj zasady korzystania.",
+          invalidCredentials: "E-mail, login lub hasło są niepoprawne.",
+          accountExists: "Konto z tym e-mailem lub loginem już istnieje.",
+          server:
+            "Nie udało się wykonać zapytania. Spróbuj ponownie za chwilę.",
         },
         login: {
           title: "Logowanie",
@@ -85,10 +100,11 @@ const pl = {
           remember: "Zapamiętaj mnie",
           forgotPassword: "Nie pamiętasz hasła?",
           submit: "Zaloguj",
+          submitting: "Logowanie",
           noAccount: "Nie masz jeszcze konta?",
           createAccount: "Utwórz konto",
-          demoNotice:
-            "To widok frontendowy. Po poprawnej walidacji ustawia lokalny stan zalogowania.",
+          apiNotice:
+            "Sesja zostanie zapisana lokalnie i dołączona do chronionych zapytań API.",
         },
         register: {
           title: "Rejestracja",
@@ -101,10 +117,11 @@ const pl = {
           accept: "Akceptuję",
           terms: "zasady korzystania",
           submit: "Zarejestruj",
+          submitting: "Tworzenie konta",
           hasAccount: "Masz już konto?",
           signIn: "Przejdź do logowania",
-          demoNotice:
-            "Rejestracja korzysta teraz z lokalnego stanu aplikacji, dopóki endpoint API nie zostanie podłączony.",
+          apiNotice:
+            "Pierwsze utworzone konto otrzyma uprawnienia administratora z API.",
         },
         reset: {
           title: "Resetowanie hasła",
@@ -125,9 +142,7 @@ const pl = {
         },
       },
 
-
       user: {
-
         termsOfService: {
           title: "Zasady korzystania z usługi",
           subtitle:
@@ -209,9 +224,130 @@ const pl = {
           },
         },
 
-        home: {},
+        home: {
+          hero: {
+            eyebrow: "Full-stack developer w rozwoju",
+            name: "Patryk Znamirowski",
+            headline:
+              "Ambitny młody programista, który z pasją zamienia pomysły w działające aplikacje webowe.",
+            description:
+              "Każdego dnia rozwijam swoje kompetencje programistyczne, łącząc szkolną teorię z praktycznym pisaniem kodu. Tworzę nowoczesne strony i aplikacje, eksperymentując z nowymi technologiami. Aktywnie szukam możliwości zdobycia pierwszego doświadczenia i wejścia w świat profesjonalnego IT.",
+            primaryAction: "Zobacz moje projekty",
+            secondaryAction: "Skontaktuj się ze mną",
+            imageAlt: "Patryk Znamirowski - zdjęcie profilowe",
+          },
+          links: {
+            github: "Profil GitHub Patryka",
+            linkedin: "Profil LinkedIn Patryka",
+            email: "Napisz e-mail do Patryka",
+          },
+          profileCard: {
+            eyebrow: "Bielsko-Biała / technikum",
+            title: "Uczeń kierunku technik programista",
+            description:
+              "Buduję własne projekty, rozwijam stack React i NestJS oraz szukam pierwszych realnych wyzwań w branży IT.",
+          },
+          metrics: {
+            education: {
+              value: "3 lata",
+              label:
+                "Aktywnej nauki w technikum na kierunku technik programista.",
+            },
+            practice: {
+              value: "Setki godzin",
+              label: "Samodzielnego zgłębiania tajników kodu po lekcjach.",
+            },
+            motivation: {
+              value: "100%",
+              label:
+                "Motywacji do rozwoju i zdobycia pierwszego doświadczenia komercyjnego.",
+            },
+          },
+          focus: {
+            title: "Co znajdziesz na tej stronie",
+            description:
+              "To portfolio pokazuje moje projekty, aktualny etap nauki oraz praktyczne eksperymenty z aplikacjami webowymi.",
+            items: {
+              projects: {
+                title: "Projekty webowe",
+                description:
+                  "Realne aplikacje i eksperymenty, w których ćwiczę frontend, backend i integracje API.",
+              },
+              learning: {
+                title: "Droga rozwoju",
+                description:
+                  "Krótka historia tego, jak od ciekawości do gier w Roblox przeszedłem do tworzenia aplikacji webowych.",
+              },
+              glucose: {
+                title: "Integracja CGM",
+                description:
+                  "Moduł z danymi glukozy pokazujący, jak łączę frontend z realnym źródłem danych.",
+              },
+            },
+          },
+        },
 
-        aboutme: {},
+        aboutme: {
+          title: "O mnie",
+          subtitle:
+            "Poznaj mój etap nauki, sposób pracy i to, czego szukam w pierwszych zawodowych wyzwaniach.",
+          story: {
+            eyebrow: "Historia",
+            title: "Od ciekawości do własnych aplikacji",
+            description:
+              "Programowanie traktuję jak rzemiosło, którego najlepiej uczyć się przez realne projekty, dokumentację i konsekwentne poprawianie kodu.",
+            start:
+              "Cześć! Mam 17 lat i uczę się w technikum w Bielsku-Białej na kierunku technik programista. Moja kariera programistyczna zaczęła się od prostej ciekawości w postaci tworzenia gier w Roblox, a dziś przekłada się na regularne tworzenie własnych, coraz bardziej zaawansowanych projektów.",
+            learning:
+              "W swoim wolnym czasie staram się wychodzić daleko poza szkolny program. Samodzielnie zgłębiam nowoczesne frameworki, uczę się dobrych praktyk pisania czystego kodu i staram się zrozumieć, jak budować aplikacje, które są zarówno wydajne, jak i przyjazne dla użytkownika.",
+            goal: "Obecnie moim głównym celem jest zderzenie moich umiejętności z rzeczywistością biznesową. Bardzo chętnie podejmę się stażu, praktyk lub juniorskich wyzwań, aby móc uczyć się od bardziej doświadczonych programistów w prawdziwym środowisku pracy.",
+          },
+          experience: {
+            eyebrow: "Aktualny etap",
+            title: "Nauka i pierwsza praktyka",
+            items: {
+              school: {
+                title: "Uczeń technikum",
+                description:
+                  "Uczę się w technikum w Bielsku-Białej na kierunku technik programista i rozwijam własne projekty poza szkolnym programem.",
+              },
+              practice: {
+                title: "1 miesiąc praktyk z Laravelem",
+                description:
+                  "Mam za sobą praktyki, podczas których pracowałem z frameworkiem Laravel i poznawałem realniejszy rytm tworzenia aplikacji.",
+              },
+            },
+          },
+          tech: {
+            eyebrow: "Stack",
+            title: "Technologie, które teraz rozwijam",
+            description:
+              "Najmocniej skupiam się na budowaniu aplikacji webowych w ekosystemie React, NestJS i TailwindCSS.",
+          },
+          strengths: {
+            eyebrow: "Wyróżniki",
+            title: "Jak podchodzę do nauki i problemów",
+            description:
+              "Jestem na początku drogi, ale właśnie dlatego stawiam na elastyczność, samodzielność i konsekwencję.",
+            items: {
+              curiosity: {
+                title: "Ogromny głód wiedzy",
+                description:
+                  "Nie ograniczam się do tego, co muszę zrobić na zaliczenie. Samodzielnie czytam dokumentacje, oglądam tutoriale i testuję najnowsze technologie rynkowe, aby być na bieżąco z trendami.",
+              },
+              flexibility: {
+                title: "Brak złych nawyków i duża elastyczność",
+                description:
+                  "Jestem na początku swojej drogi, co oznacza, że chłonę wiedzę i szybko adaptuję się do nowych standardów, narzędzi oraz metodologii pracy w zespole.",
+              },
+              determination: {
+                title: "Determinacja w rozwiązywaniu problemów",
+                description:
+                  "Jeśli napotykam błąd w kodzie, nie poddaję się, dopóki nie zrozumiem jego przyczyny. Potrafię samodzielnie szukać rozwiązań, co wzmacnia moją samodzielność techniczną.",
+              },
+            },
+          },
+        },
 
         projects: {
           title: "Moje projekty",
@@ -390,6 +526,13 @@ const pl = {
             aboutme: "O mnie",
             projects: "Projekty",
             glucose: "Cukier we krwi",
+          },
+          account: {
+            login: "Zaloguj",
+            logout: "Wyloguj",
+            expand: "Otwórz menu konta",
+            profile: "Profil",
+            settings: "Ustawienia",
           },
         },
         footer: {

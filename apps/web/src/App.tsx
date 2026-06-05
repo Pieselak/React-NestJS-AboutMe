@@ -66,6 +66,8 @@ function App() {
           <Route path="register" element={<RegisterPage />} />
           <Route path="login" element={<LoginPage />} />
           <Route path="reset-password" element={<ResetPasswordPage />} />
+          <Route path="profile" element={<UnderConstructionPage />} />
+          <Route path="settings" element={<UnderConstructionPage />} />
           <Route path="logout" />
           <Route path="terms" element={<TermsOfServicePage />} />
           <Route path="privacy" element={<PrivacyPolicyPage />} />

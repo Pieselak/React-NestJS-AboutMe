@@ -21,7 +21,7 @@ export function UserMobileNavigation({
       <motion.header
         initial={{ opacity: 0, y: -12 }}
         animate={{ opacity: 1, y: 0 }}
-        className="sticky top-3 z-40 mt-3 w-full px-3"
+        className="sticky top-3 z-40 mt-3 w-full max-w-6xl px-3 md:px-6"
       >
         <MobileNavigationTopBar onOpenMenu={() => setIsOpen(true)} />
       </motion.header>

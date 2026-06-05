@@ -6,6 +6,11 @@ const de = {
     flag: DE,
   },
   translation: {
+    roles: {
+      admin: "Administrator",
+      user: "Benutzer",
+    },
+
     pages: {
       loading: {
         title: "Laden",
@@ -52,12 +57,16 @@ const de = {
       auth: {
         fields: {
           name: "Vollständiger Name",
+          username: "Benutzername",
+          identifier: "E-Mail oder Benutzername",
           email: "E-Mail-Adresse",
           password: "Passwort",
           confirmPassword: "Passwort wiederholen",
         },
         placeholders: {
           name: "Max Mustermann",
+          username: "max",
+          identifier: "max oder max@example.com",
           email: "max@example.com",
           password: "Mindestens 8 Zeichen",
           confirmPassword: "Passwort wiederholen",
@@ -68,11 +77,19 @@ const de = {
         },
         errors: {
           name: "Gib deinen vollständigen Namen ein.",
+          username: "Gib einen Benutzernamen mit mindestens 3 Zeichen ein.",
+          identifierRequired:
+            "Gib deine E-Mail-Adresse oder deinen Benutzernamen ein.",
           email: "Gib eine gültige E-Mail-Adresse ein.",
           passwordRequired: "Gib dein Passwort ein.",
           passwordLength: "Das Passwort muss mindestens 8 Zeichen haben.",
           passwordMatch: "Die Passwörter müssen übereinstimmen.",
           terms: "Akzeptiere die Nutzungsbedingungen.",
+          invalidCredentials: "E-Mail, Benutzername oder Passwort ist falsch.",
+          accountExists:
+            "Ein Konto mit dieser E-Mail oder diesem Benutzernamen existiert bereits.",
+          server:
+            "Die Anfrage konnte nicht abgeschlossen werden. Versuche es gleich erneut.",
         },
         login: {
           title: "Anmelden",
@@ -85,10 +102,11 @@ const de = {
           remember: "Angemeldet bleiben",
           forgotPassword: "Passwort vergessen?",
           submit: "Einloggen",
+          submitting: "Einloggen",
           noAccount: "Noch kein Konto?",
           createAccount: "Konto erstellen",
-          demoNotice:
-            "Dies ist eine Frontend-Ansicht. Nach gültiger Eingabe wird der lokale Login-Status gesetzt.",
+          apiNotice:
+            "Deine Sitzung wird lokal gespeichert und an geschützte API-Anfragen angehängt.",
         },
         register: {
           title: "Registrieren",
@@ -101,10 +119,11 @@ const de = {
           accept: "Ich akzeptiere die",
           terms: "Nutzungsbedingungen",
           submit: "Registrieren",
+          submitting: "Konto erstellen",
           hasAccount: "Du hast schon ein Konto?",
           signIn: "Zur Anmeldung",
-          demoNotice:
-            "Die Registrierung nutzt derzeit den lokalen App-Status, bis der API-Endpunkt verbunden ist.",
+          apiNotice:
+            "Das erste erstellte Konto erhält Administratorrechte aus der API.",
         },
         reset: {
           title: "Passwort zurücksetzen",
@@ -125,9 +144,7 @@ const de = {
         },
       },
 
-
       user: {
-
         termsOfService: {
           title: "Nutzungsbedingungen",
           subtitle:
@@ -210,9 +227,130 @@ const de = {
           },
         },
 
-        home: {},
+        home: {
+          hero: {
+            eyebrow: "Full-stack-Entwickler im Aufbau",
+            name: "Patryk Znamirowski",
+            headline:
+              "Ein ambitionierter junger Programmierer, der Ideen mit Leidenschaft in funktionierende Webanwendungen verwandelt.",
+            description:
+              "Jeden Tag entwickle ich meine Programmierkenntnisse weiter, indem ich schulische Theorie mit praktischem Coding verbinde. Ich erstelle moderne Websites und Anwendungen und experimentiere mit neuen Technologien. Aktiv suche ich nach Möglichkeiten, erste Erfahrungen zu sammeln und in die professionelle IT-Welt einzusteigen.",
+            primaryAction: "Meine Projekte ansehen",
+            secondaryAction: "Kontakt aufnehmen",
+            imageAlt: "Patryk Znamirowski - Profilfoto",
+          },
+          links: {
+            github: "Patryks GitHub-Profil",
+            linkedin: "Patryks LinkedIn-Profil",
+            email: "Patryk eine E-Mail senden",
+          },
+          profileCard: {
+            eyebrow: "Bielsko-Biala / Technikum",
+            title: "Schüler im Bereich Programmierung",
+            description:
+              "Ich baue eigene Projekte, entwickle meinen React- und NestJS-Stack weiter und suche meine ersten echten Herausforderungen in der IT-Branche.",
+          },
+          metrics: {
+            education: {
+              value: "3 Jahre",
+              label: "Aktives Lernen am Technikum im Bereich Programmierung.",
+            },
+            practice: {
+              value: "Hunderte Stunden",
+              label:
+                "Eigenständiges Vertiefen von Programmierwissen nach dem Unterricht.",
+            },
+            motivation: {
+              value: "100%",
+              label:
+                "Motivation, mich weiterzuentwickeln und erste kommerzielle Erfahrung zu sammeln.",
+            },
+          },
+          focus: {
+            title: "Was du auf dieser Seite findest",
+            description:
+              "Dieses Portfolio zeigt meine Projekte, meinen aktuellen Lernstand und praktische Experimente mit Webanwendungen.",
+            items: {
+              projects: {
+                title: "Webprojekte",
+                description:
+                  "Reale Anwendungen und Experimente, in denen ich Frontend, Backend und API-Integrationen übe.",
+              },
+              learning: {
+                title: "Entwicklungsweg",
+                description:
+                  "Eine kurze Geschichte darüber, wie aus Neugier für Roblox-Spiele das Bauen von Webanwendungen wurde.",
+              },
+              glucose: {
+                title: "CGM-Integration",
+                description:
+                  "Ein Glukosemodul, das zeigt, wie ich das Frontend mit einer realen Datenquelle verbinde.",
+              },
+            },
+          },
+        },
 
-        aboutme: {},
+        aboutme: {
+          title: "Über mich",
+          subtitle:
+            "Lerne meinen aktuellen Lernstand, meine Arbeitsweise und meine Ziele für die ersten beruflichen Herausforderungen kennen.",
+          story: {
+            eyebrow: "Geschichte",
+            title: "Von Neugier zu eigenen Anwendungen",
+            description:
+              "Ich sehe Programmieren als Handwerk, das man am besten durch reale Projekte, Dokumentation und konsequente Verbesserung des Codes lernt.",
+            start:
+              "Hallo! Ich bin 17 Jahre alt und besuche ein Technikum in Bielsko-Biala im Bereich Programmierung. Meine Programmierlaufbahn begann mit einfacher Neugier beim Erstellen von Roblox-Spielen und führt heute zum regelmäßigen Bau eigener, immer anspruchsvollerer Projekte.",
+            learning:
+              "In meiner Freizeit versuche ich, weit über den Schulstoff hinauszugehen. Ich erkunde selbstständig moderne Frameworks, lerne gute Praktiken für sauberen Code und möchte verstehen, wie man Anwendungen baut, die sowohl performant als auch nutzerfreundlich sind.",
+            goal: "Mein aktuelles Hauptziel ist es, meine Fähigkeiten mit der geschäftlichen Realität zu konfrontieren. Sehr gerne würde ich ein Praktikum, eine Trainee-Stelle oder Junior-Aufgaben übernehmen, um von erfahreneren Entwicklern in einer echten Arbeitsumgebung zu lernen.",
+          },
+          experience: {
+            eyebrow: "Aktueller Stand",
+            title: "Lernen und erste Praxis",
+            items: {
+              school: {
+                title: "Schüler am Technikum",
+                description:
+                  "Ich lerne in Bielsko-Biala im Bereich Programmierung und entwickle eigene Projekte außerhalb des Schulprogramms.",
+              },
+              practice: {
+                title: "1 Monat Praxis mit Laravel",
+                description:
+                  "Ich habe ein Praktikum absolviert, in dem ich mit dem Laravel-Framework gearbeitet und den realistischeren Rhythmus der Anwendungsentwicklung kennengelernt habe.",
+              },
+            },
+          },
+          tech: {
+            eyebrow: "Stack",
+            title: "Technologien, die ich aktuell entwickle",
+            description:
+              "Mein stärkster Fokus liegt auf Webanwendungen im Ökosystem von React, NestJS und TailwindCSS.",
+          },
+          strengths: {
+            eyebrow: "Stärken",
+            title: "Wie ich an Lernen und Probleme herangehe",
+            description:
+              "Ich stehe am Anfang meines Weges, und genau deshalb setze ich auf Flexibilität, Selbstständigkeit und Konsequenz.",
+            items: {
+              curiosity: {
+                title: "Großer Wissenshunger",
+                description:
+                  "Ich beschränke mich nicht auf das, was für Schulaufgaben nötig ist. Ich lese Dokumentationen, schaue Tutorials und teste aktuelle Technologien, um nah an den Trends zu bleiben.",
+              },
+              flexibility: {
+                title: "Keine schlechten Gewohnheiten und hohe Flexibilität",
+                description:
+                  "Ich stehe am Anfang meiner Laufbahn, deshalb nehme ich Wissen schnell auf und passe mich zügig an neue Standards, Werkzeuge und Team-Methoden an.",
+              },
+              determination: {
+                title: "Ausdauer beim Lösen von Problemen",
+                description:
+                  "Wenn ich auf einen Fehler im Code stoße, gebe ich nicht auf, bis ich seine Ursache verstehe. Ich kann selbstständig nach Lösungen suchen, was meine technische Eigenständigkeit stärkt.",
+              },
+            },
+          },
+        },
 
         projects: {
           title: "Meine Projekte",
@@ -391,6 +529,13 @@ const de = {
             aboutme: "Über mich",
             projects: "Projekte",
             glucose: "Blutzucker",
+          },
+          account: {
+            login: "Einloggen",
+            logout: "Ausloggen",
+            expand: "Kontomenü öffnen",
+            profile: "Profil",
+            settings: "Einstellungen",
           },
         },
         footer: {
