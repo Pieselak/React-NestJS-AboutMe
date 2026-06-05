@@ -17,11 +17,7 @@ export class TokenBlacklistService implements OnModuleInit, OnModuleDestroy {
 
   async onModuleInit(): Promise<void> {
     this.client = createClient({
-      socket: {
-        host: this.redisConfig.host,
-        port: this.redisConfig.port,
-      },
-      password: this.redisConfig.password,
+      url: this.redisConfig.url,
     });
 
     this.client.on('error', (error: Error) => {

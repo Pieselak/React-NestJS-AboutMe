@@ -1,23 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import {
   IsBooleanString,
-  IsNumberString,
   IsOptional,
   IsString,
+  IsUrl,
   validateSync,
 } from 'class-validator';
 import { plainToClass } from 'class-transformer';
 
 class RedisConfigDto {
   @IsString()
-  REDIS_HOST: string;
-
-  @IsNumberString()
-  REDIS_PORT: string;
-
-  @IsOptional()
-  @IsString()
-  REDIS_PASSWORD?: string;
+  @IsUrl({
+    require_tld: false,
+    require_protocol: true,
+    protocols: ['redis', 'rediss'],
+  })
+  REDIS_URL: string;
 
   @IsOptional()
   @IsBooleanString()
@@ -26,9 +24,7 @@ class RedisConfigDto {
 
 @Injectable()
 export class RedisConfig {
-  readonly host: string;
-  readonly port: number;
-  readonly password?: string;
+  readonly url: string;
   readonly required: boolean;
 
   constructor() {
@@ -39,9 +35,7 @@ export class RedisConfig {
       throw new Error(`Invalid redis configuration: ${JSON.stringify(errors)}`);
     }
 
-    this.host = config.REDIS_HOST;
-    this.port = Number(config.REDIS_PORT);
-    this.password = config.REDIS_PASSWORD || undefined;
+    this.url = config.REDIS_URL;
     this.required =
       config.REDIS_REQUIRED !== undefined
         ? config.REDIS_REQUIRED === 'true'
