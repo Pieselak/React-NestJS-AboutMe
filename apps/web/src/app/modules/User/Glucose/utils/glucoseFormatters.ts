@@ -1,3 +1,18 @@
+type DurationFormatConstructor = new (
+  locales?: Intl.LocalesArgument,
+  options?: { style?: "long" | "short" | "narrow" | "digital" },
+) => {
+  format(duration: {
+    days?: number;
+    hours?: number;
+    minutes?: number;
+  }): string;
+};
+
+const DurationFormat = (
+  Intl as typeof Intl & { DurationFormat: DurationFormatConstructor }
+).DurationFormat;
+
 export function formatGlucoseDate(
   timestamp: number | string | null | undefined,
   language: string,
@@ -18,20 +33,19 @@ export function formatGlucoseDuration(
   milliseconds: number | null | undefined,
   language: string,
 ) {
-  if (!milliseconds || milliseconds < 0) return "-";
+  if (milliseconds === null || milliseconds === undefined) return "-";
+  if (!Number.isFinite(milliseconds) || milliseconds < 0) return "-";
 
-  const minutes = Math.max(1, Math.round(milliseconds / 60000));
-  const days = Math.floor(minutes / 1440);
-  const hours = Math.floor((minutes % 1440) / 60);
-  const remainingMinutes = minutes % 60;
-  const formatter = new Intl.NumberFormat(language);
+  const totalMinutes = Math.ceil(milliseconds / 60_000);
+  const days = Math.floor(totalMinutes / 1_440);
+  const hours = Math.floor((totalMinutes % 1_440) / 60);
+  const minutes = totalMinutes % 60;
+  const formatter = new DurationFormat(language, { style: "short" });
 
-  if (days > 0) return `${formatter.format(days)}d ${formatter.format(hours)}h`;
-  if (hours > 0) {
-    return `${formatter.format(hours)}h ${formatter.format(remainingMinutes)}m`;
-  }
+  if (days > 0) return formatter.format({ days, hours });
+  if (hours > 0) return formatter.format({ hours, minutes });
 
-  return `${formatter.format(remainingMinutes)}m`;
+  return formatter.format({ minutes });
 }
 
 export function formatPercent(value: number, language: string) {

@@ -6,7 +6,11 @@ type ProgressBarProps = {
   label?: string;
 };
 
-export function ProgressBar({ value, tone = "green", label }: ProgressBarProps) {
+export function ProgressBar({
+  value,
+  tone = "green",
+  label,
+}: ProgressBarProps) {
   const toneClasses = getToneClasses(tone);
   const normalizedValue = Math.min(100, Math.max(0, value));
 
@@ -20,7 +24,7 @@ export function ProgressBar({ value, tone = "green", label }: ProgressBarProps) 
       )}
       <div className="h-2 overflow-hidden rounded-full border border-border bg-surface-inset">
         <div
-          className={`h-full rounded-full ${toneClasses.fill}`}
+          className={`h-full ${toneClasses.fill}`}
           style={{ width: `${normalizedValue}%` }}
         />
       </div>
