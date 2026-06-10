@@ -1,4 +1,4 @@
-# About Me Web
+# Personal Portfolio Website
 
 Frontend aplikacji portfolio zbudowany jako SPA w React i TypeScript. Prezentuje
 profil autora, projekty oraz dane glikemiczne pobierane z backendowego API.

@@ -1,4 +1,4 @@
-# About Me - full-stack portfolio
+# Personal Portfolio Website
 
 Pełnostosowa aplikacja portfolio z modułem projektów, uwierzytelnianiem
 użytkowników oraz prezentacją danych glikemicznych. Repozytorium jest monorepo

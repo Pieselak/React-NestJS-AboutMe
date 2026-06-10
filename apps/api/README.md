@@ -1,4 +1,4 @@
-# About Me API
+# Personal Portfolio Website API
 
 Backend aplikacji portfolio zbudowany w NestJS. Udostępnia REST API dla
 projektów, użytkowników, uwierzytelniania, statusu aplikacji oraz danych
