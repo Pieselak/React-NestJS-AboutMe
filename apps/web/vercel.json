@@ -1,6 +1,13 @@
 {
   "installCommand": "pnpm install",
   "buildCommand": "pnpm build",
+  "redirects": [
+    {
+      "source": "/:path*",
+      "destination": "https://pieselak.app/:path*",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     {
       "source": "/(.*)",

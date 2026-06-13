@@ -173,8 +173,10 @@ export class GlucoseDexcomService extends BaseGlucoseService {
           validateStatus: () => true,
         };
 
-        const rangeResponse =
-          (await this.api.v3.getDataRangeV3(undefined, requestParams)) as AxiosResponse<DexcomApiDataRangeResponse>;
+        const rangeResponse = (await this.api.v3.getDataRangeV3(
+          undefined,
+          requestParams,
+        )) as AxiosResponse<DexcomApiDataRangeResponse>;
 
         const dataRange: DexcomApiDataRangeResponse =
           await this.handleResponse(rangeResponse);
@@ -183,17 +185,17 @@ export class GlucoseDexcomService extends BaseGlucoseService {
           new Date(dataRange.egvs.end.systemTime).getTime() -
             12 * 3600 * GLUCOSE_CONSTANTS.SEC_TO_MS,
         );
-        const egvsResponse =
-          (await this.api.v3.getEstimatedGlucoseValuesV3(
-            {
-              startDate: formatDate(egvsStartDate),
-              endDate: formatDate(new Date()),
-            },
-            requestParams,
-          )) as AxiosResponse<DexcomApiEgvsResponse>;
+        const egvsResponse = (await this.api.v3.getEstimatedGlucoseValuesV3(
+          {
+            startDate: formatDate(egvsStartDate),
+            endDate: formatDate(new Date()),
+          },
+          requestParams,
+        )) as AxiosResponse<DexcomApiEgvsResponse>;
 
-        const devicesResponse =
-          (await this.api.v3.getDevicesV3(requestParams)) as AxiosResponse<DexcomApiDevicesResponse>;
+        const devicesResponse = (await this.api.v3.getDevicesV3(
+          requestParams,
+        )) as AxiosResponse<DexcomApiDevicesResponse>;
 
         const egvsData = await this.handleResponse(egvsResponse);
         const devicesData = await this.handleResponse(devicesResponse);

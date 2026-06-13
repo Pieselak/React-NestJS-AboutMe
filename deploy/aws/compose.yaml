@@ -1,0 +1,52 @@
+name: portfolio
+
+services:
+  web:
+    image: ${WEB_IMAGE:?Set WEB_IMAGE in .env}
+    pull_policy: always
+    restart: unless-stopped
+    ports:
+      - "${WEB_PORT:-80}:8080"
+    depends_on:
+      api:
+        condition: service_healthy
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - portfolio
+
+  api:
+    image: ${API_IMAGE:?Set API_IMAGE in .env}
+    pull_policy: always
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: "2100"
+      CORS_ORIGIN: ${CORS_ORIGIN:?Set CORS_ORIGIN in .env}
+      DATABASE_URL: ${DATABASE_URL:?Set DATABASE_URL in .env}
+      JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET in .env}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-1d}
+      REDIS_URL: ${REDIS_URL:?Set REDIS_URL in .env}
+      REDIS_REQUIRED: ${REDIS_REQUIRED:-true}
+      LIBRE_API_URL: ${LIBRE_API_URL:-https://api.libreview.io/llu}
+      LIBRE_VERSION: ${LIBRE_VERSION:-4.16.0}
+      LIBRE_PRODUCT: ${LIBRE_PRODUCT:-llu.android}
+      LIBRE_EMAIL: ${LIBRE_EMAIL:-}
+      LIBRE_PASSWORD: ${LIBRE_PASSWORD:-}
+      LIBRE_ACCOUNT_ID: ${LIBRE_ACCOUNT_ID:-}
+      DEXCOM_API_URL: ${DEXCOM_API_URL:-https://sandbox-api.dexcom.com}
+      DEXCOM_API_VERSION: ${DEXCOM_API_VERSION:-v3}
+      DEXCOM_CLIENT_ID: ${DEXCOM_CLIENT_ID:-}
+      DEXCOM_CLIENT_SECRET: ${DEXCOM_CLIENT_SECRET:-}
+      DEXCOM_REDIRECT_URI: ${DEXCOM_REDIRECT_URI:?Set DEXCOM_REDIRECT_URI in .env}
+    ports:
+      - "${API_PORT:-2100}:2100"
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - portfolio
+
+networks:
+  portfolio:
+    driver: bridge
+

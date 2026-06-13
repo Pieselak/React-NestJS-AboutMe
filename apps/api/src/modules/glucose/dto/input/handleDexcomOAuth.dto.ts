@@ -13,7 +13,7 @@ export class HandleDexcomOAuthQuery {
   @IsString()
   @IsOptional()
   @MaxLength(512)
-  @Matches(/^[A-Za-z0-9_-]+$/, {
+  @Matches(/^[A-Za-z0-9_.-]+$/, {
     message: 'Invalid authorization code format',
   })
   code?: string;

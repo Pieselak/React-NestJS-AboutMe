@@ -172,13 +172,6 @@ export class GlucoseDexcomAuthService {
         );
       }
 
-      const tokenRequest: RefreshToken = {
-        grant_type: 'refresh_token',
-        refresh_token: refreshToken,
-        client_id: this.config.clientId,
-        client_secret: this.config.clientSecret,
-      };
-
       return await this.fetchAuthTokenFromRefreshToken(refreshToken);
     }
 
